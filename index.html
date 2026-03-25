@@ -2,936 +2,631 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>東京行程 ✈️</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>東京 · 旅記</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --bg: #0d0f14;
-    --surface: #151820;
-    --surface2: #1c2130;
-    --border: #2a3045;
-    --accent: #e8c97a;
-    --accent2: #7ab8e8;
-    --accent3: #e87aa0;
-    --text: #e8eaf0;
-    --text-muted: #7a8099;
-    --red: #e87a7a;
-    --green: #7ae8a8;
-    --radius: 12px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  }
+:root {
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --paper3: #e5dfd0;
+  --ink: #2c2416;
+  --ink2: #5a5040;
+  --ink3: #8a7d6a;
+  --ink4: #b0a390;
+  --accent: #8b4513;
+  --accent2: #c17f3a;
+  --accent3: #4a7c59;
+  --red: #a84444;
+  --border: rgba(44,36,22,.12);
+  --border2: rgba(44,36,22,.2);
+  --shadow-sm: 0 2px 8px rgba(44,36,22,.08);
+  --shadow: 0 4px 20px rgba(44,36,22,.12);
+  --r: 16px;
+  --nav-h: 64px;
+  --header-h: 56px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+#app { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* HEADER */
+.header {
+  height: var(--header-h); background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; flex-shrink: 0; position: relative;
+}
+.header::after {
+  content: ''; position: absolute; bottom: -1px; left: 20px; right: 20px;
+  height: 1px; background: linear-gradient(90deg, transparent, var(--accent2), transparent); opacity:.4;
+}
+.header-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--ink); letter-spacing:.04em; }
+.header-title span { font-style: italic; color: var(--accent); }
+.header-sync { display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size:.65rem; color: var(--ink4); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); box-shadow: 0 0 5px var(--accent3); animation: blink 2.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 60%{opacity:.3} }
 
-  body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* PAGES */
+.pages { flex: 1; overflow: hidden; position: relative; }
+.page { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--nav-h) + 16px); opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .25s, transform .25s; }
+.page.active { opacity: 1; pointer-events: all; transform: translateY(0); }
 
-  /* === HEADER === */
-  header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,15,20,0.92);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 60px;
-  }
+/* BOTTOM NAV */
+.bottom-nav { height: var(--nav-h); background: var(--paper); border-top: 1px solid var(--border); display: flex; align-items: center; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom); position: relative; }
+.bottom-nav::before { content: ''; position: absolute; top: -1px; left: 20px; right: 20px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent2), transparent); opacity:.3; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 0; cursor: pointer; transition: all .2s; color: var(--ink4); }
+.nav-item.active { color: var(--accent); }
+.nav-icon { font-size: 1.3rem; transition: transform .2s; }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-label { font-size: .6rem; letter-spacing:.06em; font-weight: 500; }
 
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem;
-    color: var(--accent);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .logo span { font-size: 1.5rem; }
+/* PAGE 1 HERO */
+.page-hero { padding: 24px 20px 16px; background: linear-gradient(160deg, var(--paper) 60%, var(--paper2)); border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-family: 'DM Mono', monospace; font-size:.65rem; letter-spacing:.14em; color: var(--ink4); text-transform: uppercase; margin-bottom: 6px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; line-height: 1.15; color: var(--ink); }
+.hero-title em { font-style: italic; color: var(--accent); }
+.hero-stats { display: flex; gap: 20px; margin-top: 16px; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent); line-height: 1; }
+.stat-label { font-size:.65rem; color: var(--ink4); margin-top: 2px; letter-spacing:.06em; }
+.search-wrap { padding: 14px 20px 0; position: relative; }
+.search-input { width: 100%; background: var(--paper2); border: 1px solid var(--border2); border-radius: 12px; padding: 11px 16px 11px 38px; font-size:.88rem; color: var(--ink); font-family: 'Noto Sans TC', sans-serif; outline: none; transition: border-color .2s, box-shadow .2s; }
+.search-input:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(193,127,58,.1); }
+.search-input::placeholder { color: var(--ink4); }
+.search-icon { position: absolute; left: 34px; top: 50%; transform: translateY(-50%); font-size:.9rem; pointer-events: none; color: var(--ink4); }
 
-  .header-right { display: flex; align-items: center; gap: 12px; }
+/* DAY CARDS */
+.days-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.day-card { background: white; border-radius: var(--r); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; transition: box-shadow .2s, transform .2s; animation: cardIn .35s ease both; }
+.day-card:active { transform: scale(.99); }
+@keyframes cardIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.day-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.day-badge { font-family: 'DM Mono', monospace; font-size:.62rem; letter-spacing:.1em; text-transform: uppercase; background: var(--paper2); color: var(--accent); border: 1px solid rgba(139,69,19,.2); border-radius: 6px; padding: 3px 8px; flex-shrink: 0; margin-top: 2px; }
+.day-card-meta { flex: 1; min-width: 0; }
+.day-card-city { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ink); margin-bottom: 2px; }
+.day-card-date { font-size:.75rem; color: var(--ink3); }
+.day-card-dest { font-size:.78rem; color: var(--ink3); margin-top: 4px; line-height: 1.5; }
+.day-card-actions { display: flex; gap: 6px; align-items: center; }
+.icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border2); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size:.9rem; color: var(--ink3); transition: all .15s; }
+.icon-btn.danger { color: var(--red); }
 
-  .sync-badge {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 0.72rem; color: var(--text-muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+/* STOPS */
+.day-card-stops { padding: 12px 16px; display: flex; flex-direction: column; }
+.stop-mini { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--border); position: relative; }
+.stop-mini:last-child { border-bottom: none; }
+.stop-mini-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; margin-top: 5px; box-shadow: 0 0 0 3px rgba(193,127,58,.15); }
+.stop-mini-line { position: absolute; left: 3px; top: 16px; bottom: -8px; width: 1px; background: linear-gradient(var(--border2), transparent); }
+.stop-mini:last-child .stop-mini-line { display: none; }
+.stop-mini-name { font-size:.83rem; color: var(--ink); font-weight: 500; }
+.stop-mini-time { font-family: 'DM Mono', monospace; font-size:.68rem; color: var(--ink4); margin-top: 1px; }
 
-  /* === TOOLBAR === */
-  .toolbar {
-    padding: 16px 24px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
+/* TYPE PILLS */
+.type-pill { font-size:.62rem; padding: 2px 7px; border-radius: 20px; font-weight: 500; letter-spacing:.04em; }
+.tp-food { background: #fdf0e0; color: #a0631a; }
+.tp-sightseeing { background: #e8f0f8; color: #2a5a8a; }
+.tp-transport { background: #f0ede8; color: #6a5a4a; }
+.tp-hotel { background: #e8f4ec; color: #2a6a42; }
+.tp-shopping { background: #f4e8f4; color: #6a2a7a; }
+.tp-other { background: var(--paper2); color: var(--ink3); }
 
-  .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 16px; border-radius: 8px; border: none;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 0.85rem; cursor: pointer;
-    transition: all .2s;
-  }
-  .btn-primary { background: var(--accent); color: #0d0f14; font-weight: 700; }
-  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent2); color: var(--accent2); }
-  .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--border); }
-  .btn-danger:hover { border-color: var(--red); background: rgba(232,122,122,.1); }
+/* CHIPS / CREDS */
+.day-card-footer { padding: 10px 16px 12px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 6px; }
+.info-chip { display: flex; align-items: center; gap: 4px; font-size:.72rem; color: var(--ink3); background: var(--paper2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; }
+.day-card-creds { padding: 10px 16px 12px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 7px; }
+.cred-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--paper2); border-radius: 10px; border: 1px solid var(--border); }
+.cred-label-text { flex: 1; font-size:.8rem; color: var(--ink2); }
+.cred-note-text { font-size:.7rem; color: var(--ink4); margin-top: 1px; }
+.cred-open { font-size:.72rem; color: var(--accent); text-decoration: none; padding: 4px 10px; border: 1px solid rgba(139,69,19,.3); border-radius: 6px; white-space: nowrap; }
 
-  .search-box {
-    flex: 1; min-width: 200px; max-width: 320px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 8px 14px;
-    color: var(--text); font-size: 0.85rem;
-    font-family: 'Noto Sans TC', sans-serif;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .search-box:focus { border-color: var(--accent2); }
-  .search-box::placeholder { color: var(--text-muted); }
+/* FAB */
+.fab { position: fixed; bottom: calc(var(--nav-h) + 16px); right: 20px; width: 52px; height: 52px; border-radius: 16px; background: var(--ink); color: var(--paper); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 300; box-shadow: 0 4px 16px rgba(44,36,22,.3); transition: transform .2s; z-index: 50; }
+.fab:active { transform: scale(.93); }
 
-  /* === MAIN LAYOUT === */
-  .main {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    height: calc(100vh - 60px - 57px);
-  }
+/* MAP PAGE */
+.map-day-selector { padding: 14px 20px 10px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; background: var(--paper); border-bottom: 1px solid var(--border); }
+.map-day-selector::-webkit-scrollbar { display: none; }
+.map-day-chip { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); font-size:.78rem; cursor: pointer; background: white; color: var(--ink2); transition: all .15s; white-space: nowrap; font-family: 'Noto Sans TC', sans-serif; }
+.map-day-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+#map-container { flex: 1; position: relative; min-height: 0; }
+#gmap { width: 100%; height: 100%; }
+.map-stop-list { position: absolute; bottom: 0; left: 0; right: 0; background: var(--paper); border-radius: 20px 20px 0 0; border-top: 1px solid var(--border); box-shadow: 0 -4px 20px rgba(44,36,22,.1); max-height: 40%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 0 16px; }
+.map-stop-list-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 10px auto 12px; }
+.map-stop-row { display: flex; align-items: center; gap: 12px; padding: 10px 20px; cursor: pointer; transition: background .15s; }
+.map-stop-row:active { background: var(--paper2); }
+.map-stop-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white; font-size:.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.map-stop-name { font-size:.85rem; font-weight: 500; color: var(--ink); }
+.map-stop-time { font-size:.72rem; color: var(--ink4); font-family: 'DM Mono', monospace; }
 
-  /* === SIDEBAR (DAY LIST) === */
-  .sidebar {
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    background: var(--surface);
-  }
+/* CREDS PAGE */
+.creds-section-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 12px; margin-top: 20px; }
+.creds-section-title:first-child { margin-top: 0; }
+.cred-full-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
+.cred-full-label { font-size:.88rem; font-weight: 500; color: var(--ink); }
+.cred-full-day { font-size:.72rem; color: var(--ink4); margin-top: 2px; font-family: 'DM Mono', monospace; }
+.cred-full-note { font-size:.75rem; color: var(--ink3); margin-top: 3px; }
 
-  .sidebar-header {
-    padding: 16px 20px 12px;
-    font-size: 0.72rem; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-  }
+/* SHEET */
+.sheet-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(44,36,22,.5); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.sheet-overlay.open { opacity: 1; pointer-events: all; }
+.sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 101; background: var(--paper); border-radius: 24px 24px 0 0; padding: 0 0 env(safe-area-inset-bottom); max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; transform: translateY(100%); transition: transform .35s cubic-bezier(.32,.72,0,1); }
+.sheet-overlay.open .sheet { transform: translateY(0); }
+.sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 12px auto 0; }
+.sheet-header { padding: 16px 20px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.sheet-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); }
+.sheet-close { width: 32px; height: 32px; border-radius: 50%; background: var(--paper2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size:.85rem; color: var(--ink3); }
+.sheet-body { padding: 18px 20px 24px; }
 
-  .day-item {
-    padding: 14px 20px;
-    border-bottom: 1px solid rgba(42,48,69,.5);
-    cursor: pointer;
-    transition: background .15s;
-    position: relative;
-  }
-  .day-item:hover { background: var(--surface2); }
-  .day-item.active { background: var(--surface2); }
-  .day-item.active::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; background: var(--accent);
-    border-radius: 0 2px 2px 0;
-  }
+/* FORM */
+.form-group { margin-bottom: 14px; }
+label { display: block; font-size:.73rem; color: var(--ink3); margin-bottom: 5px; letter-spacing:.04em; }
+input[type=text], input[type=url], textarea, select { width: 100%; background: white; border: 1px solid var(--border2); border-radius: 10px; padding: 11px 14px; font-family: 'Noto Sans TC', sans-serif; font-size:.88rem; color: var(--ink); outline: none; transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; }
+input:focus, textarea:focus, select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(193,127,58,.1); }
+textarea { resize: none; min-height: 72px; }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7d6a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.divider-label { font-size:.7rem; letter-spacing:.1em; text-transform: uppercase; color: var(--ink4); display: flex; align-items: center; gap: 10px; margin: 18px 0 12px; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+.dynamic-row { display: grid; gap: 8px; margin-bottom: 8px; align-items: center; }
+.stop-drow { grid-template-columns: 64px 1fr 84px auto; }
+.cred-drow { grid-template-columns: 84px 1fr auto; }
+.add-row-btn { display: flex; align-items: center; gap: 6px; background: var(--paper2); border: 1px dashed var(--border2); border-radius: 8px; padding: 8px 14px; font-size:.8rem; color: var(--ink3); cursor: pointer; width: 100%; font-family: 'Noto Sans TC', sans-serif; }
+.remove-row-btn { width: 30px; height: 30px; border-radius: 8px; background: transparent; border: 1px solid var(--border2); color: var(--red); cursor: pointer; font-size:.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.btn-save { width: 100%; padding: 14px; background: var(--ink); color: var(--paper); border: none; border-radius: 14px; font-family: 'Noto Sans TC', sans-serif; font-size:.95rem; font-weight: 500; cursor: pointer; margin-top: 20px; letter-spacing:.06em; box-shadow: 0 4px 16px rgba(44,36,22,.2); transition: transform .15s; }
+.btn-save:active { transform: scale(.98); }
 
-  .day-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem; color: var(--accent);
-    margin-bottom: 3px;
-  }
-  .day-city { font-size: 0.9rem; font-weight: 500; }
-  .day-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-  .day-hotel {
-    font-size: 0.75rem; color: var(--text-muted);
-    margin-top: 4px;
-    display: flex; align-items: center; gap: 4px;
-  }
+/* EMPTY / LOADING */
+.empty-state { text-align: center; padding: 60px 30px; color: var(--ink4); }
+.empty-kanji { font-family: 'Noto Serif TC', serif; font-size: 3rem; opacity:.2; margin-bottom: 14px; color: var(--ink); }
+.empty-msg { font-size:.9rem; line-height: 1.7; }
+.loading-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 60px 20px; color: var(--ink4); font-size:.85rem; }
+.loader { width: 18px; height: 18px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* === CONTENT === */
-  .content {
-    overflow-y: auto;
-    padding: 28px 32px;
-    background: var(--bg);
-  }
+/* TOAST */
+.toast { position: fixed; top: calc(var(--header-h) + 10px); left: 50%; z-index: 200; transform: translateX(-50%) translateY(-20px); background: var(--ink); color: var(--paper); padding: 10px 20px; border-radius: 20px; font-size:.82rem; letter-spacing:.04em; opacity: 0; pointer-events: none; transition: all .25s; white-space: nowrap; box-shadow: var(--shadow); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.err { background: var(--red); }
 
-  /* === TIMELINE === */
-  .timeline {
-    display: flex; flex-direction: column; gap: 0;
-  }
-
-  .timeline-item {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 0 20px;
-    position: relative;
-    animation: fadeIn .3s ease forwards;
-  }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-  .timeline-time {
-    text-align: right;
-    padding-top: 18px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    position: relative;
-  }
-
-  .timeline-line {
-    position: relative;
-    padding: 16px 0 24px 20px;
-    border-left: 2px solid var(--border);
-  }
-  .timeline-line::before {
-    content: '';
-    position: absolute; left: -5px; top: 20px;
-    width: 8px; height: 8px;
-    border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 8px rgba(232,201,122,.5);
-  }
-
-  .stop-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    transition: border-color .2s, transform .2s;
-  }
-  .stop-card:hover { border-color: var(--accent2); transform: translateX(2px); }
-
-  .stop-name { font-weight: 500; font-size: 0.95rem; margin-bottom: 4px; }
-  .stop-note { font-size: 0.82rem; color: var(--text-muted); }
-  .stop-type-badge {
-    display: inline-block;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 0.7rem; font-weight: 500;
-    margin-bottom: 6px;
-  }
-  .type-food { background: rgba(232,122,160,.15); color: var(--accent3); }
-  .type-sightseeing { background: rgba(122,184,232,.15); color: var(--accent2); }
-  .type-transport { background: rgba(232,201,122,.15); color: var(--accent); }
-  .type-hotel { background: rgba(122,232,168,.15); color: var(--green); }
-  .type-shopping { background: rgba(160,122,232,.15); color: #a07ae8; }
-  .type-other { background: rgba(122,128,153,.15); color: var(--text-muted); }
-
-  /* === DAY HEADER === */
-  .day-header {
-    margin-bottom: 28px;
-  }
-  .day-header-top {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .day-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 3rem; color: var(--accent);
-    line-height: 1;
-  }
-  .day-meta { margin-top: 4px; }
-  .day-city-big { font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
-  .day-date-big { font-size: 0.85rem; color: var(--text-muted); }
-
-  .info-chips {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-top: 12px;
-  }
-  .chip {
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 12px; border-radius: 6px;
-    border: 1px solid var(--border);
-    font-size: 0.8rem; color: var(--text-muted);
-    background: var(--surface);
-    transition: all .2s;
-  }
-  .chip.clickable { cursor: pointer; }
-  .chip.clickable:hover { border-color: var(--accent2); color: var(--accent2); }
-  .chip-icon { font-size: 1rem; }
-
-  /* === CREDS === */
-  .creds-section { margin-top: 24px; }
-  .section-title {
-    font-size: 0.75rem; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--text-muted);
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-title::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
-
-  .cred-card {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    transition: border-color .2s;
-  }
-  .cred-card:hover { border-color: var(--accent2); }
-  .cred-icon { font-size: 1.3rem; }
-  .cred-label { flex: 1; font-size: 0.88rem; }
-  .cred-note { font-size: 0.77rem; color: var(--text-muted); margin-top: 2px; }
-  .cred-link {
-    padding: 5px 12px; background: transparent;
-    border: 1px solid var(--accent2); border-radius: 6px;
-    color: var(--accent2); font-size: 0.77rem; cursor: pointer;
-    text-decoration: none; transition: all .2s; white-space: nowrap;
-  }
-  .cred-link:hover { background: rgba(122,184,232,.15); }
-
-  /* === MAP === */
-  .map-section { margin-top: 24px; }
-  #map {
-    width: 100%; height: 340px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  /* === MODAL === */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    opacity: 0; pointer-events: none;
-    transition: opacity .2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    width: 100%; max-width: 560px;
-    max-height: 85vh;
-    overflow-y: auto;
-    transform: translateY(20px);
-    transition: transform .3s;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem; color: var(--accent);
-    margin-bottom: 20px;
-  }
-
-  .form-row {
-    display: grid; gap: 12px;
-    margin-bottom: 14px;
-  }
-  .form-row-2 { grid-template-columns: 1fr 1fr; }
-
-  label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
-
-  input, textarea, select {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 13px;
-    color: var(--text);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 0.88rem;
-    outline: none;
-    transition: border-color .2s;
-  }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent2); }
-  select option { background: var(--surface2); }
-  textarea { resize: vertical; min-height: 70px; }
-
-  .modal-footer {
-    display: flex; justify-content: flex-end; gap: 10px;
-    margin-top: 20px; padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* === STOPS EDITOR === */
-  .stops-editor { margin-top: 12px; }
-  .stop-row {
-    display: grid; grid-template-columns: 1fr 1fr auto;
-    gap: 8px; margin-bottom: 8px; align-items: center;
-  }
-  .remove-btn {
-    width: 30px; height: 30px; border-radius: 6px;
-    background: transparent; border: 1px solid var(--border);
-    color: var(--red); cursor: pointer; font-size: 1rem;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-  }
-  .remove-btn:hover { background: rgba(232,122,122,.15); border-color: var(--red); }
-
-  /* === CREDS EDITOR === */
-  .cred-row {
-    display: grid; grid-template-columns: 100px 1fr 1fr auto;
-    gap: 8px; margin-bottom: 8px; align-items: center;
-  }
-
-  /* === EMPTY STATE === */
-  .empty {
-    text-align: center; padding: 60px 20px;
-    color: var(--text-muted);
-  }
-  .empty-icon { font-size: 3rem; margin-bottom: 12px; }
-  .empty-text { font-size: 1rem; margin-bottom: 20px; }
-
-  /* === LOADING === */
-  .loading {
-    display: flex; align-items: center; justify-content: center;
-    height: 200px; color: var(--text-muted);
-    gap: 10px;
-  }
-  .spinner {
-    width: 20px; height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* === SCROLLBAR === */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* === TOAST === */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    padding: 12px 20px; border-radius: 10px;
-    font-size: 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    transform: translateY(80px); opacity: 0;
-    transition: all .3s;
-    max-width: 300px;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success { border-color: var(--green); color: var(--green); }
-  .toast.error { border-color: var(--red); color: var(--red); }
-
-  /* === MOBILE === */
-  @media (max-width: 768px) {
-    .main { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .content { padding: 16px; }
-  }
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 </style>
 </head>
 <body>
+<div id="app">
+  <div class="header">
+    <div class="header-title">東京 · <span>旅記</span></div>
+    <div class="header-sync"><div class="sync-dot" id="syncDot"></div><span>即時同步</span></div>
+  </div>
 
-<!-- HEADER -->
-<header>
-  <div class="logo"><span>✈️</span> Tokyo Trip 2026</div>
-  <div class="header-right">
-    <div class="sync-badge">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatus">即時同步</span>
+  <div class="pages">
+    <!-- 行程 -->
+    <div class="page active" id="page-itinerary">
+      <div class="page-hero">
+        <div class="hero-eyebrow">TOKYO · APRIL 2026</div>
+        <div class="hero-title">春日<em>東京</em><br>旅行記</div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num" id="statDays">0</div><div class="stat-label">天</div></div>
+          <div class="stat"><div class="stat-num" id="statStops">0</div><div class="stat-label">景點</div></div>
+          <div class="stat"><div class="stat-num" id="statCreds">0</div><div class="stat-label">憑證</div></div>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="searchInput" placeholder="搜尋景點、飯店、城市…" oninput="filterDays()">
+      </div>
+      <div id="daysList" class="days-list">
+        <div class="loading-wrap"><div class="loader"></div>載入中…</div>
+      </div>
     </div>
-    <button class="btn btn-primary" onclick="openAddModal()">＋ 新增行程日</button>
-  </div>
-</header>
 
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <input class="search-box" id="searchBox" placeholder="🔍 搜尋景點、飯店、城市…" oninput="filterDays()">
-  <button class="btn btn-ghost" onclick="collapseAll()">📋 總覽</button>
-  <button class="btn btn-ghost" onclick="exportJSON()">📤 匯出</button>
-  <span style="margin-left:auto;font-size:.78rem;color:var(--text-muted)" id="tripStats"></span>
+    <!-- 地圖 -->
+    <div class="page" id="page-map" style="display:flex;flex-direction:column;padding-bottom:0">
+      <div class="map-day-selector" id="mapDaySelector"><div style="color:var(--ink4);font-size:.8rem;padding:4px 0">載入中…</div></div>
+      <div id="map-container" style="flex:1;position:relative;min-height:0">
+        <div id="gmap" style="width:100%;height:100%"></div>
+        <div class="map-stop-list" id="mapStopList">
+          <div class="map-stop-list-handle"></div>
+          <div id="mapStopRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 憑證 -->
+    <div class="page" id="page-creds">
+      <div style="padding:20px 20px 8px">
+        <div class="hero-eyebrow" style="margin-bottom:4px">CREDENTIALS</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem">訂單 &amp; 憑證</div>
+      </div>
+      <div style="padding:0 20px 20px" id="credsPageContent">
+        <div class="loading-wrap"><div class="loader"></div>載入中…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('itinerary')" id="nav-itinerary">
+      <div class="nav-icon">📖</div><div class="nav-label">行程</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('map')" id="nav-map">
+      <div class="nav-icon">🗺️</div><div class="nav-label">地圖</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('creds')" id="nav-creds">
+      <div class="nav-icon">🎫</div><div class="nav-label">憑證</div>
+    </div>
+  </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">行程天數</div>
-    <div id="dayList"></div>
-  </div>
-  <div class="content" id="content">
-    <div class="loading"><div class="spinner"></div> 載入行程中…</div>
-  </div>
-</div>
-
-<!-- TOAST -->
+<button class="fab" onclick="openSheet()" id="fab">＋</button>
 <div class="toast" id="toast"></div>
 
-<!-- ADD/EDIT DAY MODAL -->
-<div class="modal-overlay" id="dayModal">
-  <div class="modal">
-    <div class="modal-title" id="modalTitle">✈️ 新增行程日</div>
-
-    <div class="form-row form-row-2">
-      <div><label>第幾天</label><input id="f_day" placeholder="Day 1"></div>
-      <div><label>日期</label><input id="f_date" placeholder="4/25 (五)"></div>
+<!-- BOTTOM SHEET -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="handleOverlayClick(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title" id="sheetTitle">新增行程日</div>
+      <button class="sheet-close" onclick="closeSheet()">✕</button>
     </div>
-    <div class="form-row form-row-2">
-      <div><label>城市</label><input id="f_city" placeholder="東京"></div>
-      <div><label>目的地摘要</label><input id="f_dest" placeholder="淺草、上野"></div>
-    </div>
-    <div class="form-row">
-      <div><label>行程說明</label><textarea id="f_itin" placeholder="今天的主要行程描述…"></textarea></div>
-    </div>
-    <div class="form-row form-row-2">
-      <div><label>住宿飯店</label><input id="f_hotel" placeholder="APA Hotel 上野"></div>
-      <div><label>交通方式</label><input id="f_transport" placeholder="JR、Metro、步行"></div>
-    </div>
-    <div class="form-row">
-      <div><label>備注</label><input id="f_notes" placeholder="其他提醒事項…"></div>
-    </div>
-
-    <!-- STOPS -->
-    <div class="section-title" style="margin-top:20px">景點行程</div>
-    <div class="stops-editor" id="stopsEditor"></div>
-    <button class="btn btn-ghost" style="font-size:.8rem;padding:6px 12px;margin-top:4px" onclick="addStopRow()">＋ 新增景點</button>
-
-    <!-- CREDS -->
-    <div class="section-title" style="margin-top:20px">憑證 / 訂單</div>
-    <div class="stops-editor" id="credsEditor"></div>
-    <button class="btn btn-ghost" style="font-size:.8rem;padding:6px 12px;margin-top:4px" onclick="addCredRow()">＋ 新增憑證</button>
-
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('dayModal')">取消</button>
-      <button class="btn btn-primary" onclick="saveDay()">儲存</button>
+    <div class="sheet-body">
+      <div class="form-row2">
+        <div class="form-group"><label>第幾天</label><input type="text" id="f_day" placeholder="Day 1"></div>
+        <div class="form-group"><label>日期</label><input type="text" id="f_date" placeholder="4/25 (五)"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>城市</label><input type="text" id="f_city" placeholder="東京"></div>
+        <div class="form-group"><label>目的地摘要</label><input type="text" id="f_dest" placeholder="淺草、上野"></div>
+      </div>
+      <div class="form-group"><label>行程說明</label><textarea id="f_itin" placeholder="今日主要行程…"></textarea></div>
+      <div class="form-row2">
+        <div class="form-group"><label>住宿飯店</label><input type="text" id="f_hotel" placeholder="APA Hotel"></div>
+        <div class="form-group"><label>交通方式</label><input type="text" id="f_transport" placeholder="JR、地鐵"></div>
+      </div>
+      <div class="form-group"><label>備注</label><input type="text" id="f_notes" placeholder="其他提醒…"></div>
+      <div class="divider-label">景點行程</div>
+      <div id="stopsEditor"></div>
+      <button class="add-row-btn" onclick="addStopRow()">＋ 新增景點</button>
+      <div class="divider-label">訂單 / 憑證</div>
+      <div id="credsEditor"></div>
+      <button class="add-row-btn" onclick="addCredRow()">＋ 新增憑證</button>
+      <button class="btn-save" onclick="saveDay()">儲存行程</button>
     </div>
   </div>
 </div>
 
-<!-- GOOGLE MAPS -->
 <script>
-  function initMap() {}
+let gmapReady = false, pendingMapRender = null;
+function initGoogleMap() {
+  gmapReady = true;
+  if (pendingMapRender) { pendingMapRender(); pendingMapRender = null; }
+}
 </script>
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-PLACEHOLDER&callback=initMap"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdi3xzKPIXYHlw4_Fkpeke9vXFKeSuam0&callback=initGoogleMap&language=zh-TW"></script>
 
 <script>
-// ==============================
-// SUPABASE INIT
-// ==============================
-const SUPABASE_URL = 'https://znjzimfuewtneublkefw.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpuanppbWZ1ZXd0bmV1YmxrZWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NDcyMDAsImV4cCI6MjA5MDAyMzIwMH0.cagGJViMAoPZnXuTbaZcVKG_1WcolL5qwCYIoxO5BOw';
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SB_URL = 'https://znjzimfuewtneublkefw.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpuanppbWZ1ZXd0bmV1YmxrZWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NDcyMDAsImV4cCI6MjA5MDAyMzIwMH0.cagGJViMAoPZnXuTbaZcVKG_1WcolL5qwCYIoxO5BOw';
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-// ==============================
-// STATE
-// ==============================
-let allDays = [];
-let activeId = null;
-let editingId = null;
-let mapInstance = null;
+let allDays = [], editingId = null, stopRows = [], credRows = [];
+let currentPage = 'itinerary', mapDayId = null;
+let gmap = null, markers = [], infoWindows = [];
 
-// ==============================
-// INIT
-// ==============================
-async function init() {
-  await loadDays();
-  subscribeRealtime();
-}
+async function init() { await loadDays(); subscribeRealtime(); }
 
-// ==============================
-// LOAD
-// ==============================
 async function loadDays() {
-  const { data, error } = await sb
-    .from('trips')
-    .select('*')
-    .order('sort_order', { ascending: true })
-    .order('id', { ascending: true });
-
-  if (error) { showToast('載入失敗：' + error.message, 'error'); return; }
+  const { data, error } = await sb.from('trips').select('*').order('sort_order').order('id');
+  if (error) { toast('載入失敗', true); return; }
   allDays = data || [];
-  renderSidebar();
-  if (allDays.length > 0) {
-    selectDay(activeId && allDays.find(d => d.id === activeId) ? activeId : allDays[0].id);
-  } else {
-    renderEmpty();
-  }
-  updateStats();
+  renderAll();
 }
 
-// ==============================
-// REALTIME
-// ==============================
+function renderAll() {
+  renderDaysList();
+  renderStats();
+  renderCredsPage();
+  renderMapSelector();
+}
+
 function subscribeRealtime() {
-  sb.channel('trips-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'trips' }, () => {
-      loadDays();
-      flashSync();
-    })
-    .subscribe();
+  sb.channel('trips').on('postgres_changes', { event:'*', schema:'public', table:'trips' }, () => {
+    loadDays(); flashSync();
+  }).subscribe();
 }
-
 function flashSync() {
-  const dot = document.getElementById('syncDot');
-  dot.style.background = 'var(--accent)';
-  dot.style.boxShadow = '0 0 8px var(--accent)';
-  setTimeout(() => {
-    dot.style.background = 'var(--green)';
-    dot.style.boxShadow = '0 0 6px var(--green)';
-  }, 1000);
+  const d = document.getElementById('syncDot');
+  d.style.background = '#c17f3a';
+  setTimeout(() => { d.style.background = ''; }, 1200);
 }
 
-// ==============================
-// RENDER SIDEBAR
-// ==============================
-function renderSidebar(days = allDays) {
-  const el = document.getElementById('dayList');
-  if (!days.length) { el.innerHTML = '<div style="padding:20px;color:var(--text-muted);font-size:.82rem;text-align:center">尚無行程</div>'; return; }
-  el.innerHTML = days.map(d => `
-    <div class="day-item ${d.id === activeId ? 'active' : ''}" onclick="selectDay(${d.id})">
-      <div class="day-label">${d.day || 'Day ?'}</div>
-      <div class="day-city">${d.city || '未設定'}</div>
-      <div class="day-date">${d.date || ''}</div>
-      ${d.hotel ? `<div class="day-hotel"><span>🏨</span>${d.hotel}</div>` : ''}
-    </div>
-  `).join('');
-}
-
-// ==============================
-// RENDER CONTENT
-// ==============================
-function selectDay(id) {
-  activeId = id;
-  renderSidebar();
-  const day = allDays.find(d => d.id === id);
-  if (!day) return;
-  renderDayContent(day);
-}
-
-function renderDayContent(day) {
-  const stops = Array.isArray(day.stops) ? day.stops : [];
-  const creds = Array.isArray(day.creds) ? day.creds : [];
-
-  const stopsHtml = stops.length ? `
-    <div class="section-title" style="margin-top:24px">今日景點時間軸</div>
-    <div class="timeline">
-      ${stops.map((s, i) => `
-        <div class="timeline-item">
-          <div class="timeline-time">${s.time || ''}</div>
-          <div class="timeline-line">
-            <div class="stop-card">
-              ${s.type ? `<div class="stop-type-badge type-${s.type}">${typeLabel(s.type)}</div>` : ''}
-              <div class="stop-name">${s.name || '未命名景點'}</div>
-              ${s.note ? `<div class="stop-note">${s.note}</div>` : ''}
+// ── RENDER DAYS ──
+function renderDaysList(days = allDays) {
+  const el = document.getElementById('daysList');
+  if (!days.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-kanji">旅</div><div class="empty-msg">還沒有行程<br><span style="font-size:.82rem">點下方 ＋ 開始規劃東京之旅</span></div></div>`;
+    return;
+  }
+  el.innerHTML = days.map((d, i) => {
+    const stops = Array.isArray(d.stops) ? d.stops : [];
+    const creds = Array.isArray(d.creds) ? d.creds : [];
+    return `<div class="day-card" style="animation-delay:${i*.06}s">
+      <div class="day-card-header" onclick="toggleCard(${d.id})">
+        <div class="day-badge">${d.day||'?'}</div>
+        <div class="day-card-meta">
+          <div class="day-card-city">${d.city||'未設定'}</div>
+          <div class="day-card-date">${d.date||''}</div>
+          ${d.dest?`<div class="day-card-dest">📍 ${d.dest}</div>`:''}
+        </div>
+        <div class="day-card-actions">
+          <button class="icon-btn" onclick="event.stopPropagation();openEditSheet(${d.id})">✏️</button>
+          <button class="icon-btn danger" onclick="event.stopPropagation();deleteDay(${d.id})">🗑</button>
+        </div>
+      </div>
+      <div id="card-body-${d.id}" style="display:none">
+        ${stops.length?`<div class="day-card-stops">${stops.map((s,si)=>`
+          <div class="stop-mini">
+            ${si<stops.length-1?'<div class="stop-mini-line"></div>':''}
+            <div class="stop-mini-dot"></div>
+            <div style="flex:1;min-width:0">
+              <div class="stop-mini-name">${s.name||'未命名'}</div>
+              ${s.time?`<div class="stop-mini-time">${s.time}</div>`:''}
+              ${s.note?`<div style="font-size:.72rem;color:var(--ink4);margin-top:2px">${s.note}</div>`:''}
             </div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  ` : '';
-
-  const credsHtml = creds.length ? `
-    <div class="creds-section">
-      <div class="section-title">憑證 / 訂單</div>
-      ${creds.map(c => `
-        <div class="cred-card">
-          <div class="cred-icon">${credIcon(c.type)}</div>
-          <div style="flex:1">
-            <div class="cred-label">${c.label || '未命名'}</div>
-            ${c.note ? `<div class="cred-note">${c.note}</div>` : ''}
-          </div>
-          ${c.url ? `<a class="cred-link" href="${c.url}" target="_blank">開啟 →</a>` : ''}
-        </div>
-      `).join('')}
-    </div>
-  ` : '';
-
-  // Map stops with coords
-  const mapStops = stops.filter(s => s.lat && s.lng);
-  const mapHtml = `
-    <div class="map-section">
-      <div class="section-title">地圖路線</div>
-      <div id="map"></div>
-    </div>
-  `;
-
-  document.getElementById('content').innerHTML = `
-    <div class="day-header">
-      <div class="day-header-top">
-        <div>
-          <div class="day-num">${day.day || 'Day ?'}</div>
-          <div class="day-meta">
-            <div class="day-city-big">${day.city || '未設定城市'}</div>
-            <div class="day-date-big">📅 ${day.date || '未設定日期'}</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn btn-ghost" onclick="openEditModal(${day.id})">✏️ 編輯</button>
-          <button class="btn btn-danger" onclick="deleteDay(${day.id})">🗑️</button>
-        </div>
+            <span class="type-pill tp-${s.type||'other'}" style="flex-shrink:0;align-self:flex-start;margin-top:3px">${typeLabel(s.type)}</span>
+          </div>`).join('')}</div>`:''}
+        ${(d.hotel||d.transport)?`<div class="day-card-footer">${d.hotel?`<div class="info-chip">🏨 ${d.hotel}</div>`:''}${d.transport?`<div class="info-chip">🚃 ${d.transport}</div>`:''}</div>`:''}
+        ${creds.length?`<div class="day-card-creds">${creds.map(c=>`
+          <div class="cred-item">
+            <span style="font-size:1.1rem">${credIcon(c.type)}</span>
+            <div style="flex:1;min-width:0"><div class="cred-label-text">${c.label||'未命名'}</div>${c.note?`<div class="cred-note-text">${c.note}</div>`:''}</div>
+            ${c.url?`<a class="cred-open" href="${c.url}" target="_blank">開啟</a>`:''}
+          </div>`).join('')}</div>`:''}
+        ${d.itin?`<div style="padding:12px 16px;border-top:1px dashed var(--border);font-size:.8rem;color:var(--ink3);line-height:1.7">${d.itin}</div>`:''}
+        ${d.notes?`<div style="padding:10px 16px 12px;background:rgba(193,127,58,.06);font-size:.78rem;color:var(--accent);border-top:1px solid rgba(193,127,58,.15)">📌 ${d.notes}</div>`:''}
       </div>
-
-      <div class="info-chips">
-        ${day.hotel ? `<div class="chip"><span class="chip-icon">🏨</span>${day.hotel}</div>` : ''}
-        ${day.transport ? `<div class="chip"><span class="chip-icon">🚃</span>${day.transport}</div>` : ''}
-        ${day.dest ? `<div class="chip"><span class="chip-icon">📍</span>${day.dest}</div>` : ''}
-      </div>
-
-      ${day.itin ? `<p style="margin-top:14px;font-size:.9rem;color:var(--text-muted);line-height:1.7">${day.itin}</p>` : ''}
-      ${day.notes ? `<p style="margin-top:8px;font-size:.82rem;color:var(--accent);padding:10px 14px;background:rgba(232,201,122,.08);border-radius:8px;border-left:3px solid var(--accent)">📌 ${day.notes}</p>` : ''}
-    </div>
-
-    ${stopsHtml}
-    ${credsHtml}
-    ${mapHtml}
-  `;
-
-  // Render map
-  renderMap(mapStops, day.city);
+    </div>`;
+  }).join('');
 }
 
-function renderEmpty() {
-  document.getElementById('content').innerHTML = `
-    <div class="empty">
-      <div class="empty-icon">🗼</div>
-      <div class="empty-text">還沒有行程資料<br><span style="font-size:.82rem;color:var(--text-muted)">點擊右上角「新增行程日」開始規劃東京之旅</span></div>
-      <button class="btn btn-primary" onclick="openAddModal()">＋ 新增第一天行程</button>
-    </div>
-  `;
+function toggleCard(id) {
+  const b = document.getElementById('card-body-'+id);
+  if (b) b.style.display = b.style.display==='none' ? 'block' : 'none';
 }
 
-// ==============================
-// MAP (Google Maps Embed fallback)
-// ==============================
-function renderMap(stops, city) {
-  const mapEl = document.getElementById('map');
-  if (!mapEl) return;
+function renderStats() {
+  document.getElementById('statDays').textContent = allDays.length;
+  document.getElementById('statStops').textContent = allDays.reduce((a,d)=>a+(d.stops?.length||0),0);
+  document.getElementById('statCreds').textContent = allDays.reduce((a,d)=>a+(d.creds?.length||0),0);
+}
 
-  const query = (city || '東京') + ' Japan';
-  const embed = `https://www.google.com/maps/embed/v1/search?key=AIzaSyD-PLACEHOLDER&q=${encodeURIComponent(query)}`;
+function filterDays() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (!q) { renderDaysList(); return; }
+  renderDaysList(allDays.filter(d =>
+    [d.city,d.dest,d.hotel,d.itin,...(d.stops||[]).map(s=>s.name)].some(v=>(v||'').toLowerCase().includes(q))
+  ));
+}
 
-  if (stops.length >= 2) {
-    const origin = `${stops[0].lat},${stops[0].lng}`;
-    const dest = `${stops[stops.length-1].lat},${stops[stops.length-1].lng}`;
-    const waypoints = stops.slice(1,-1).map(s=>`${s.lat},${s.lng}`).join('|');
-    mapEl.innerHTML = `<iframe width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"
-      src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyD-PLACEHOLDER&origin=${origin}&destination=${dest}${waypoints?'&waypoints='+waypoints:''}&mode=walking">
-    </iframe>`;
-  } else {
-    mapEl.innerHTML = `<iframe width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"
-      src="${embed}">
-    </iframe>`;
+// ── PAGE SWITCH ──
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  currentPage = name;
+  document.getElementById('fab').style.display = name==='itinerary' ? '' : 'none';
+  if (name==='map' && allDays.length) {
+    const id = mapDayId ?? allDays[0].id;
+    renderMapForDay(id);
   }
 }
 
-// ==============================
-// MODAL
-// ==============================
-let stopRows = [];
-let credRows = [];
-
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = '✈️ 新增行程日';
-  clearForm();
-  stopRows = [];
-  credRows = [];
-  renderStopRows();
-  renderCredRows();
-  document.getElementById('dayModal').classList.add('open');
+// ── MAP ──
+function renderMapSelector() {
+  document.getElementById('mapDaySelector').innerHTML = allDays.length
+    ? allDays.map(d=>`<div class="map-day-chip ${d.id===mapDayId?'active':''}" onclick="renderMapForDay(${d.id})">${d.day||'Day?'} ${d.city||''}</div>`).join('')
+    : '<div style="color:var(--ink4);font-size:.8rem;padding:4px 0">尚無行程日</div>';
 }
 
-function openEditModal(id) {
-  const day = allDays.find(d => d.id === id);
+function renderMapForDay(id) {
+  mapDayId = id;
+  renderMapSelector();
+  const day = allDays.find(d=>d.id===id);
   if (!day) return;
-  editingId = id;
-  document.getElementById('modalTitle').textContent = '✏️ 編輯行程日';
-  document.getElementById('f_day').value = day.day || '';
-  document.getElementById('f_date').value = day.date || '';
-  document.getElementById('f_city').value = day.city || '';
-  document.getElementById('f_dest').value = day.dest || '';
-  document.getElementById('f_itin').value = day.itin || '';
-  document.getElementById('f_hotel').value = day.hotel || '';
-  document.getElementById('f_transport').value = day.transport || '';
-  document.getElementById('f_notes').value = day.notes || '';
-  stopRows = Array.isArray(day.stops) ? day.stops.map(s => ({...s})) : [];
-  credRows = Array.isArray(day.creds) ? day.creds.map(c => ({...c})) : [];
-  renderStopRows();
-  renderCredRows();
-  document.getElementById('dayModal').classList.add('open');
+  const stops = (day.stops||[]).filter(s=>s.name);
+  document.getElementById('mapStopRows').innerHTML = stops.length
+    ? stops.map((s,i)=>`<div class="map-stop-row" onclick="panToStop(${i})">
+        <div class="map-stop-num">${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <div class="map-stop-name">${s.name}</div>
+          ${s.time?`<div class="map-stop-time">${s.time}</div>`:''}
+        </div>
+        <span class="type-pill tp-${s.type||'other'}">${typeLabel(s.type)}</span>
+      </div>`).join('')
+    : '<div style="padding:16px 20px;text-align:center;color:var(--ink4);font-size:.83rem">此行程日沒有景點</div>';
+  const doRender = () => renderGMap(stops, day.city);
+  if (gmapReady) doRender(); else pendingMapRender = doRender;
 }
 
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+function renderGMap(stops, city) {
+  const container = document.getElementById('gmap');
+  const defaultCenter = { lat:35.6762, lng:139.6503 };
+  if (!gmap) {
+    gmap = new google.maps.Map(container, {
+      center: defaultCenter, zoom: 13,
+      mapTypeControl: false, fullscreenControl: false, streetViewControl: false,
+      styles: [
+        {featureType:'all',elementType:'geometry',stylers:[{color:'#f5f0e8'}]},
+        {featureType:'water',elementType:'geometry',stylers:[{color:'#c9e0ec'}]},
+        {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+        {featureType:'road',elementType:'geometry.stroke',stylers:[{color:'#e0d8cc'}]},
+        {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#d8e8d0'}]},
+        {elementType:'labels.text.fill',stylers:[{color:'#5a5040'}]},
+        {elementType:'labels.text.stroke',stylers:[{color:'#f5f0e8'}]},
+      ]
+    });
+  }
+  markers.forEach(m=>m.setMap(null)); infoWindows.forEach(iw=>iw.close());
+  markers=[]; infoWindows=[];
+  if (!stops.length) { gmap.setCenter(defaultCenter); return; }
+  const geocoder = new google.maps.Geocoder();
+  const bounds = new google.maps.LatLngBounds();
+  let placed = 0;
+  stops.forEach((s,i) => {
+    geocoder.geocode({ address: s.name+' '+(city||'東京')+' Japan' }, (results,status) => {
+      if (status==='OK' && results[0]) {
+        const pos = results[0].geometry.location;
+        bounds.extend(pos);
+        const marker = new google.maps.Marker({
+          position:pos, map:gmap,
+          label:{text:String(i+1),color:'#f5f0e8',fontSize:'12px',fontWeight:'700'},
+          icon:{path:google.maps.SymbolPath.CIRCLE,scale:16,fillColor:'#8b4513',fillOpacity:1,strokeColor:'#f5f0e8',strokeWeight:2},
+          title:s.name
+        });
+        const iw = new google.maps.InfoWindow({
+          content:`<div style="font-family:'Noto Sans TC',sans-serif;padding:4px 2px;min-width:120px">
+            <b style="font-size:.85rem;color:#2c2416">${s.name}</b>
+            ${s.time?`<div style="font-size:.72rem;color:#8a7d6a;margin-top:2px">${s.time}</div>`:''}
+            ${s.note?`<div style="font-size:.72rem;color:#5a5040;margin-top:3px">${s.note}</div>`:''}
+          </div>`
+        });
+        marker.addListener('click',()=>{ infoWindows.forEach(w=>w.close()); iw.open(gmap,marker); });
+        markers.push(marker); infoWindows.push(iw);
+        placed++;
+        if (placed===stops.length) { gmap.fitBounds(bounds); if(placed===1) gmap.setZoom(15); }
+      }
+    });
+  });
 }
 
-function clearForm() {
-  ['f_day','f_date','f_city','f_dest','f_itin','f_hotel','f_transport','f_notes']
-    .forEach(id => document.getElementById(id).value = '');
+function panToStop(i) {
+  if (markers[i]) {
+    gmap.panTo(markers[i].getPosition()); gmap.setZoom(16);
+    infoWindows.forEach(w=>w.close()); infoWindows[i]?.open(gmap,markers[i]);
+  }
 }
 
-// ==============================
-// STOP ROWS
-// ==============================
-function addStopRow(data = {}) {
-  stopRows.push({ time: data.time||'', name: data.name||'', type: data.type||'sightseeing', note: data.note||'', lat: data.lat||'', lng: data.lng||'' });
-  renderStopRows();
+// ── CREDS PAGE ──
+function renderCredsPage() {
+  const el = document.getElementById('credsPageContent');
+  const all = allDays.flatMap(d=>(d.creds||[]).map(c=>({...c,dayLabel:d.day,dayDate:d.date})));
+  if (!all.length) { el.innerHTML=`<div class="empty-state"><div class="empty-kanji">票</div><div class="empty-msg">還沒有任何憑證</div></div>`; return; }
+  const grouped={};
+  all.forEach(c=>{ const t=c.type||'other'; if(!grouped[t]) grouped[t]=[]; grouped[t].push(c); });
+  const order=['flight','hotel','ticket','other'];
+  const labels={flight:'✈️ 機票',hotel:'🏨 住宿',ticket:'🎫 門票',other:'📎 其他'};
+  el.innerHTML = order.filter(t=>grouped[t]).map(t=>`
+    <div class="creds-section-title">${labels[t]}</div>
+    ${grouped[t].map(c=>`<div class="cred-full-card">
+      <div style="font-size:1.4rem;flex-shrink:0">${credIcon(c.type)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="cred-full-label">${c.label||'未命名'}</div>
+        <div class="cred-full-day">${c.dayLabel||''} ${c.dayDate?'· '+c.dayDate:''}</div>
+        ${c.note?`<div class="cred-full-note">${c.note}</div>`:''}
+      </div>
+      ${c.url?`<a class="cred-open" href="${c.url}" target="_blank">開啟</a>`:''}
+    </div>`).join('')}
+  `).join('');
 }
 
+// ── SHEET ──
+function openSheet() {
+  editingId=null; stopRows=[]; credRows=[];
+  document.getElementById('sheetTitle').textContent='新增行程日';
+  clearForm(); renderStopRows(); renderCredRows();
+  document.getElementById('sheetOverlay').classList.add('open');
+}
+function openEditSheet(id) {
+  const d=allDays.find(x=>x.id===id); if(!d) return;
+  editingId=id;
+  document.getElementById('sheetTitle').textContent='編輯行程日';
+  document.getElementById('f_day').value=d.day||'';
+  document.getElementById('f_date').value=d.date||'';
+  document.getElementById('f_city').value=d.city||'';
+  document.getElementById('f_dest').value=d.dest||'';
+  document.getElementById('f_itin').value=d.itin||'';
+  document.getElementById('f_hotel').value=d.hotel||'';
+  document.getElementById('f_transport').value=d.transport||'';
+  document.getElementById('f_notes').value=d.notes||'';
+  stopRows=(d.stops||[]).map(s=>({...s}));
+  credRows=(d.creds||[]).map(c=>({...c}));
+  renderStopRows(); renderCredRows();
+  document.getElementById('sheetOverlay').classList.add('open');
+}
+function closeSheet() { document.getElementById('sheetOverlay').classList.remove('open'); }
+function handleOverlayClick(e) { if(e.target===document.getElementById('sheetOverlay')) closeSheet(); }
+function clearForm() { ['f_day','f_date','f_city','f_dest','f_itin','f_hotel','f_transport','f_notes'].forEach(id=>document.getElementById(id).value=''); }
+
+// ── STOPS ──
+function addStopRow() { stopRows.push({time:'',name:'',type:'sightseeing',note:''}); renderStopRows(); }
 function renderStopRows() {
-  const el = document.getElementById('stopsEditor');
-  el.innerHTML = stopRows.map((s, i) => `
-    <div class="stop-row" style="grid-template-columns:80px 1fr 120px 90px auto">
-      <input placeholder="時間" value="${s.time}" oninput="stopRows[${i}].time=this.value">
-      <input placeholder="景點名稱" value="${s.name}" oninput="stopRows[${i}].name=this.value">
-      <select onchange="stopRows[${i}].type=this.value">
-        ${['sightseeing','food','transport','hotel','shopping','other'].map(t =>
-          `<option value="${t}" ${s.type===t?'selected':''}>${typeLabel(t)}</option>`).join('')}
+  document.getElementById('stopsEditor').innerHTML = stopRows.map((s,i)=>`
+    <div class="dynamic-row stop-drow">
+      <input type="text" placeholder="時間" value="${s.time||''}" oninput="stopRows[${i}].time=this.value" style="font-size:.78rem;padding:8px 10px">
+      <input type="text" placeholder="景點名稱" value="${s.name||''}" oninput="stopRows[${i}].name=this.value" style="font-size:.78rem;padding:8px 10px">
+      <select onchange="stopRows[${i}].type=this.value" style="font-size:.73rem;padding:8px 6px 8px 8px">
+        ${['sightseeing','food','transport','hotel','shopping','other'].map(t=>`<option value="${t}" ${s.type===t?'selected':''}>${typeLabel(t)}</option>`).join('')}
       </select>
-      <input placeholder="備注" value="${s.note||''}" oninput="stopRows[${i}].note=this.value">
-      <button class="remove-btn" onclick="stopRows.splice(${i},1);renderStopRows()">✕</button>
+      <button class="remove-row-btn" onclick="stopRows.splice(${i},1);renderStopRows()">✕</button>
     </div>
+    <input type="text" placeholder="備注（可選）" value="${s.note||''}" oninput="stopRows[${i}].note=this.value" style="font-size:.75rem;padding:7px 10px;margin-bottom:10px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none">
   `).join('');
 }
 
-// ==============================
-// CRED ROWS
-// ==============================
-function addCredRow(data = {}) {
-  credRows.push({ type: data.type||'hotel', label: data.label||'', url: data.url||'', note: data.note||'' });
-  renderCredRows();
-}
-
+// ── CREDS ──
+function addCredRow() { credRows.push({type:'hotel',label:'',url:'',note:''}); renderCredRows(); }
 function renderCredRows() {
-  const el = document.getElementById('credsEditor');
-  el.innerHTML = credRows.map((c, i) => `
-    <div class="cred-row">
-      <select onchange="credRows[${i}].type=this.value">
-        ${['hotel','flight','ticket','other'].map(t =>
-          `<option value="${t}" ${c.type===t?'selected':''}>${credTypeLabel(t)}</option>`).join('')}
+  document.getElementById('credsEditor').innerHTML = credRows.map((c,i)=>`
+    <div class="dynamic-row cred-drow">
+      <select onchange="credRows[${i}].type=this.value" style="font-size:.73rem;padding:8px 6px 8px 8px">
+        ${['hotel','flight','ticket','other'].map(t=>`<option value="${t}" ${c.type===t?'selected':''}>${credTypeLabel(t)}</option>`).join('')}
       </select>
-      <input placeholder="名稱（如：ANA 訂位）" value="${c.label}" oninput="credRows[${i}].label=this.value">
-      <input placeholder="連結 URL" value="${c.url}" oninput="credRows[${i}].url=this.value">
-      <button class="remove-btn" onclick="credRows.splice(${i},1);renderCredRows()">✕</button>
+      <input type="text" placeholder="名稱（如：ANA 訂位）" value="${c.label||''}" oninput="credRows[${i}].label=this.value" style="font-size:.78rem;padding:8px 10px">
+      <button class="remove-row-btn" onclick="credRows.splice(${i},1);renderCredRows()">✕</button>
     </div>
+    <input type="url" placeholder="連結 URL（可選）" value="${c.url||''}" oninput="credRows[${i}].url=this.value" style="font-size:.75rem;padding:7px 10px;margin-bottom:10px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none">
   `).join('');
 }
 
-// ==============================
-// SAVE
-// ==============================
+// ── SAVE / DELETE ──
 async function saveDay() {
   const payload = {
-    day: document.getElementById('f_day').value.trim(),
-    date: document.getElementById('f_date').value.trim(),
-    city: document.getElementById('f_city').value.trim(),
-    dest: document.getElementById('f_dest').value.trim(),
-    itin: document.getElementById('f_itin').value.trim(),
-    hotel: document.getElementById('f_hotel').value.trim(),
-    transport: document.getElementById('f_transport').value.trim(),
-    notes: document.getElementById('f_notes').value.trim(),
-    stops: stopRows,
-    creds: credRows,
-    sort_order: editingId ? allDays.find(d => d.id === editingId)?.sort_order ?? 0 : allDays.length,
+    day:v('f_day'), date:v('f_date'), city:v('f_city'), dest:v('f_dest'),
+    itin:v('f_itin'), hotel:v('f_hotel'), transport:v('f_transport'), notes:v('f_notes'),
+    stops:stopRows, creds:credRows,
+    sort_order: editingId ? (allDays.find(d=>d.id===editingId)?.sort_order??0) : allDays.length,
     updated_at: new Date().toISOString()
   };
-
-  let error;
-  if (editingId) {
-    ({ error } = await sb.from('trips').update(payload).eq('id', editingId));
-  } else {
-    ({ error } = await sb.from('trips').insert(payload));
-  }
-
-  if (error) { showToast('儲存失敗：' + error.message, 'error'); return; }
-  showToast(editingId ? '已更新行程！' : '已新增行程！', 'success');
-  closeModal('dayModal');
-  await loadDays();
+  const {error} = editingId
+    ? await sb.from('trips').update(payload).eq('id',editingId)
+    : await sb.from('trips').insert(payload);
+  if (error) { toast('儲存失敗',true); return; }
+  toast(editingId?'已更新 ✓':'已新增 ✓');
+  closeSheet(); await loadDays();
 }
-
-// ==============================
-// DELETE
-// ==============================
 async function deleteDay(id) {
-  if (!confirm('確定要刪除這天的行程嗎？')) return;
-  const { error } = await sb.from('trips').delete().eq('id', id);
-  if (error) { showToast('刪除失敗', 'error'); return; }
-  showToast('已刪除', 'success');
-  activeId = null;
-  await loadDays();
+  if (!confirm('確定刪除這天的行程？')) return;
+  const {error} = await sb.from('trips').delete().eq('id',id);
+  if (error) { toast('刪除失敗',true); return; }
+  toast('已刪除'); await loadDays();
 }
 
-// ==============================
-// SEARCH / FILTER
-// ==============================
-function filterDays() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  if (!q) { renderSidebar(); return; }
-  const filtered = allDays.filter(d =>
-    (d.city||'').toLowerCase().includes(q) ||
-    (d.dest||'').toLowerCase().includes(q) ||
-    (d.hotel||'').toLowerCase().includes(q) ||
-    (d.itin||'').toLowerCase().includes(q) ||
-    (d.stops||[]).some(s => (s.name||'').toLowerCase().includes(q))
-  );
-  renderSidebar(filtered);
+function v(id) { return document.getElementById(id).value.trim(); }
+function typeLabel(t) { return {sightseeing:'觀光',food:'餐飲',transport:'交通',hotel:'住宿',shopping:'購物',other:'其他'}[t]||'其他'; }
+function credTypeLabel(t) { return {hotel:'飯店',flight:'機票',ticket:'門票',other:'其他'}[t]||'其他'; }
+function credIcon(t) { return {hotel:'🏨',flight:'✈️',ticket:'🎫',other:'📎'}[t]||'📎'; }
+function toast(msg,err=false) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show'+(err?' err':'');
+  setTimeout(()=>el.className='toast',2800);
 }
 
-// ==============================
-// HELPERS
-// ==============================
-function typeLabel(t) {
-  return { sightseeing:'觀光', food:'餐飲', transport:'交通', hotel:'住宿', shopping:'購物', other:'其他' }[t] || t;
-}
-function credTypeLabel(t) {
-  return { hotel:'🏨 飯店', flight:'✈️ 機票', ticket:'🎫 門票', other:'📎 其他' }[t] || t;
-}
-function credIcon(t) {
-  return { hotel:'🏨', flight:'✈️', ticket:'🎫', other:'📎' }[t] || '📎';
-}
-
-function updateStats() {
-  const total = allDays.length;
-  const cities = [...new Set(allDays.map(d => d.city).filter(Boolean))].length;
-  document.getElementById('tripStats').textContent =
-    total ? `共 ${total} 天 · ${cities} 個城市` : '';
-}
-
-function collapseAll() {
-  activeId = null;
-  renderSidebar();
-  document.getElementById('content').innerHTML = allDays.map(d => `
-    <div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="selectDay(${d.id})">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);min-width:60px">${d.day||''}</div>
-      <div style="flex:1">
-        <div style="font-weight:500">${d.city||''} ${d.dest ? '— '+d.dest : ''}</div>
-        <div style="font-size:.78rem;color:var(--text-muted)">${d.date||''} ${d.hotel ? '· 🏨 '+d.hotel : ''}</div>
-      </div>
-      <div style="font-size:.78rem;color:var(--text-muted)">${(d.stops||[]).length} 個景點</div>
-    </div>
-  `).join('') || '<div class="empty"><div class="empty-icon">🗼</div><div class="empty-text">尚無行程</div></div>';
-}
-
-function exportJSON() {
-  const blob = new Blob([JSON.stringify(allDays, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'tokyo-trip.json';
-  a.click();
-}
-
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// Close modal on overlay click
-document.getElementById('dayModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal('dayModal');
-});
-
-// ==============================
-// START
-// ==============================
 init();
 </script>
 </body>
