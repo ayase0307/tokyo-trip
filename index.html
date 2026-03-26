@@ -379,6 +379,55 @@ select{
 
 /* ── SVG ICON HELPERS ── */
 svg{display:block}
+
+/* ── TIME PILL ── */
+.time-pill{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink3);background:var(--paper2);border:1px solid var(--border);border-radius:20px;padding:4px 9px;letter-spacing:.04em}
+
+/* ── BUDGET PAGE ── */
+.budget-currency-toggle{display:flex;gap:6px;padding:12px 18px 8px}
+.currency-btn{flex:1;padding:7px;border-radius:10px;border:1px solid var(--border2);background:var(--paper2);font-size:.72rem;cursor:pointer;transition:all .15s;color:var(--ink3);font-family:'DM Mono',monospace}
+.currency-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.currency-btn:hover:not(.active){background:var(--paper3);color:var(--ink)}
+.budget-section{padding:0 18px 0}
+.budget-section-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ink);margin:14px 0 10px}
+.budget-total-bar{background:var(--paper2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.budget-bar-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden;margin:8px 0}
+.budget-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent3),var(--accent2));transition:width .8s ease}
+.budget-cat-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.budget-cat-row{background:var(--paper2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;cursor:default}
+.budget-cat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.budget-cat-name{font-size:.82rem;color:var(--ink)}
+.budget-cat-amount{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--accent);font-weight:600}
+.budget-day-table{background:var(--paper2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.budget-day-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.budget-day-row:last-child{border-bottom:none}
+.budget-day-label{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent);background:rgba(139,69,19,.1);border:1px solid rgba(139,69,19,.2);border-radius:6px;padding:3px 7px;flex-shrink:0;white-space:nowrap}
+.budget-day-name{font-size:.8rem;color:var(--ink2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.budget-day-amount{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--ink);white-space:nowrap}
+
+/* ── CHECKLIST PAGE ── */
+.checklist-progress-wrap{padding:14px 18px 10px}
+.checklist-progress-bar{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;margin:6px 0 4px}
+.checklist-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent2));border-radius:3px;transition:width .4s ease}
+.checklist-progress-label{font-size:.65rem;color:var(--ink4);font-family:'DM Mono',monospace}
+.checklist-section{padding:0 18px 4px}
+.checklist-cat-title{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--ink);margin:14px 0 8px;display:flex;align-items:center;gap:7px}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--paper2);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.checklist-item:active{opacity:.75}
+.checklist-checkbox{width:20px;height:20px;border-radius:6px;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.checklist-item.done .checklist-checkbox{background:var(--accent3);border-color:var(--accent3)}
+.checklist-item-name{font-size:.84rem;color:var(--ink);flex:1;transition:color .2s}
+.checklist-item.done .checklist-item-name{text-decoration:line-through;color:var(--ink4)}
+.checklist-add-wrap{display:flex;gap:7px;padding:10px 18px 24px}
+.checklist-add-input{flex:1;background:var(--paper2);border:1px solid var(--border2);border-radius:10px;padding:9px 13px;font-size:.84rem;color:var(--ink);font-family:'Noto Sans TC',sans-serif;outline:none;transition:border-color .2s}
+.checklist-add-input:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(193,127,58,.12)}
+.checklist-add-input::placeholder{color:var(--ink4)}
+.checklist-add-btn{width:38px;height:38px;border-radius:10px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.checklist-add-btn:active{opacity:.75}
+
+/* NAV 5-ITEM SIZING */
+.nav-label{font-size:.52rem;letter-spacing:.05em;font-weight:500;text-transform:uppercase}
+.nav-icon{width:20px;height:20px;transition:transform .2s}
 </style>
 </head>
 <body>
@@ -389,6 +438,7 @@ svg{display:block}
     </div>
     <div class="header-right">
       <div class="sync-pill"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">即時同步</span></div>
+      <div class="time-pill" id="tokyoTimePill" title="東京時間">JST --:--</div>
       <button class="header-btn" onclick="exportItinerary()" aria-label="匯出行程">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       </button>
@@ -454,6 +504,24 @@ svg{display:block}
       </div>
       <div style="padding:0 18px 20px" id="credsPageContent"></div>
     </div>
+
+    <!-- 預算 -->
+    <div class="page" id="page-budget">
+      <div class="page-hero">
+        <div class="hero-eyebrow">BUDGET TRACKER</div>
+        <div class="hero-title">旅行<em>預算</em></div>
+      </div>
+      <div id="budgetContent"></div>
+    </div>
+
+    <!-- 清單 -->
+    <div class="page" id="page-checklist">
+      <div class="page-hero">
+        <div class="hero-eyebrow">PACKING LIST</div>
+        <div class="hero-title">行李<em>清單</em></div>
+      </div>
+      <div id="checklistContent"></div>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -461,13 +529,21 @@ svg{display:block}
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
       <div class="nav-label">行程</div>
     </div>
-    <div class="nav-item" onclick="switchPage('map')" id="nav-map" role="tab">
+    <div class="nav-item" onclick="switchPage('map')" id="nav-map" role="tab" aria-selected="false">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <div class="nav-label">地圖</div>
     </div>
-    <div class="nav-item" onclick="switchPage('creds')" id="nav-creds" role="tab">
+    <div class="nav-item" onclick="switchPage('budget')" id="nav-budget" role="tab" aria-selected="false">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <div class="nav-label">預算</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('creds')" id="nav-creds" role="tab" aria-selected="false">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
       <div class="nav-label">憑證</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('checklist')" id="nav-checklist" role="tab" aria-selected="false">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <div class="nav-label">清單</div>
     </div>
   </div>
 </div>
@@ -574,6 +650,9 @@ function updateDarkIcon(dark) {
 // ── INIT ──
 async function init() {
   showSkeletons();
+  loadChecklist();
+  updateTokyoTime();
+  setInterval(updateTokyoTime, 10000);
   await loadDays();
   subscribeRealtime();
   updateCountdown();
@@ -604,6 +683,7 @@ function renderAll() {
   renderStats();
   renderCredsPage();
   renderMapSelector();
+  if (currentPage === 'budget') renderBudgetPage();
 }
 
 function subscribeRealtime() {
@@ -929,6 +1009,8 @@ function switchPage(name) {
     const id = mapDayId ?? allDays[0].id;
     renderMapForDay(id);
   }
+  if (name==='budget') renderBudgetPage();
+  if (name==='checklist') renderChecklistPage();
 }
 
 // ── MAP ──
@@ -1116,10 +1198,10 @@ function renderStopRows() {
       <button class="remove-row-btn" onclick="stopRows.splice(${i},1);renderStopRows()" aria-label="移除">✕</button>
     </div>
     <div class="stop-extra-row">
-      <input type="text" placeholder="備注（可選）" value="${esc(s.note)}" oninput="stopRows[${i}].note=this.value" style="font-size:.74rem;padding:7px 9px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none;transition:border-color .2s">
+      <input type="text" placeholder="備注（可選）" value="${esc(s.note)}" oninput="stopRows[${i}].note=this.value" style="font-size:.74rem;padding:7px 9px;border-radius:8px">
       <div class="cost-input-wrap">
         <span class="cost-prefix">¥</span>
-        <input type="number" placeholder="費用" value="${esc(s.cost)}" oninput="stopRows[${i}].cost=this.value" class="cost-input" style="font-size:.74rem;padding:7px 9px 7px 24px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none;-webkit-appearance:none" inputmode="numeric">
+        <input type="number" placeholder="費用" value="${esc(s.cost)}" oninput="stopRows[${i}].cost=this.value" class="cost-input" style="font-size:.74rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
       </div>
     </div>
   `).join('');
@@ -1136,12 +1218,12 @@ function renderCredRows() {
       <input type="text" placeholder="名稱（如：ANA 訂位）" value="${esc(c.label)}" oninput="credRows[${i}].label=this.value" style="font-size:.76rem;padding:8px 9px">
       <button class="remove-row-btn" onclick="credRows.splice(${i},1);renderCredRows()" aria-label="移除">✕</button>
     </div>
-    <input type="url" placeholder="連結 URL（可選）" value="${esc(c.url)}" oninput="credRows[${i}].url=this.value" style="font-size:.73rem;padding:7px 9px;margin-bottom:5px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none">
+    <input type="url" placeholder="連結 URL（可選）" value="${esc(c.url)}" oninput="credRows[${i}].url=this.value" style="font-size:.73rem;padding:7px 9px;margin-bottom:5px;border-radius:8px">
     <div class="stop-extra-row" style="margin-bottom:10px">
-      <input type="text" placeholder="備注（可選）" value="${esc(c.note)}" oninput="credRows[${i}].note=this.value" style="font-size:.73rem;padding:7px 9px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none">
+      <input type="text" placeholder="備注（可選）" value="${esc(c.note)}" oninput="credRows[${i}].note=this.value" style="font-size:.73rem;padding:7px 9px;border-radius:8px">
       <div class="cost-input-wrap">
         <span class="cost-prefix">¥</span>
-        <input type="number" placeholder="費用" value="${esc(c.cost)}" oninput="credRows[${i}].cost=this.value" class="cost-input" style="font-size:.73rem;padding:7px 9px 7px 24px;border-radius:8px;width:100%;background:white;border:1px solid var(--border2);color:var(--ink);outline:none;-webkit-appearance:none" inputmode="numeric">
+        <input type="number" placeholder="費用" value="${esc(c.cost)}" oninput="credRows[${i}].cost=this.value" class="cost-input" style="font-size:.73rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
       </div>
     </div>
   `).join('');
@@ -1258,6 +1340,212 @@ function toastWithUndo(msg, undoFn) {
   };
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { el.className = 'toast'; }, 5000);
+}
+
+// ── TOKYO TIME ──
+function updateTokyoTime() {
+  const el = document.getElementById('tokyoTimePill');
+  if (!el) return;
+  try {
+    const now = new Date();
+    const jst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    const h = String(jst.getHours()).padStart(2,'0');
+    const m = String(jst.getMinutes()).padStart(2,'0');
+    el.textContent = `JST ${h}:${m}`;
+  } catch(e) { el.textContent = 'JST'; }
+}
+
+// ── BUDGET ──
+let budgetCurrency = 'JPY';
+const RATES = { JPY: 1, TWD: 0.22, USD: 0.0067 };
+const CURRENCY_SYMBOL = { JPY: '¥', TWD: 'NT$', USD: '$' };
+
+function formatMoney(jpy) {
+  const val = jpy * RATES[budgetCurrency];
+  const sym = CURRENCY_SYMBOL[budgetCurrency];
+  if (budgetCurrency === 'JPY') return sym + Math.round(val).toLocaleString();
+  if (budgetCurrency === 'TWD') return sym + Math.round(val).toLocaleString();
+  return sym + val.toFixed(0);
+}
+
+function setCurrency(cur) {
+  budgetCurrency = cur;
+  document.querySelectorAll('.currency-btn').forEach(b => b.classList.toggle('active', b.dataset.cur === cur));
+  renderBudgetPage();
+}
+
+function renderBudgetPage() {
+  const el = document.getElementById('budgetContent');
+  if (!allDays.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-kanji">予</div><div class="empty-msg">還沒有行程資料<br><span style="font-size:.8rem;opacity:.7">請先在行程頁面新增旅行日</span></div></div>`;
+    return;
+  }
+  const cats = { sightseeing:0, food:0, transport:0, hotel:0, shopping:0, other:0 };
+  const catColors = { sightseeing:'#3a6a9a', food:'#c9843a', transport:'#6a5a4a', hotel:'#4a7c59', shopping:'#a07ab0', other:'#8a7d6a' };
+  const catNames = { sightseeing:'觀光', food:'餐飲', transport:'交通', hotel:'住宿', shopping:'購物', other:'其他' };
+  const catSVG = {
+    sightseeing:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`,
+    food:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+    transport:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+    hotel:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    shopping:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
+    other:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+  };
+
+  allDays.forEach(d => {
+    (d.stops||[]).forEach(s => { cats[s.type||'other'] += parseFloat(s.cost)||0; });
+    (d.creds||[]).forEach(c => {
+      const t = c.type==='hotel' ? 'hotel' : c.type==='flight' ? 'transport' : c.type==='ticket' ? 'sightseeing' : 'other';
+      cats[t] += parseFloat(c.cost)||0;
+    });
+  });
+
+  const total = Object.values(cats).reduce((a,b)=>a+b,0);
+  const maxCat = Math.max(...Object.values(cats), 1);
+  const dayRows = allDays.map(d => ({ label:d.day||'?', name:d.city||'', amt:calcDayBudget(d) })).filter(r => r.amt > 0);
+
+  el.innerHTML = `
+    <div class="budget-currency-toggle">
+      <button class="currency-btn ${budgetCurrency==='JPY'?'active':''}" data-cur="JPY" onclick="setCurrency('JPY')">¥ JPY</button>
+      <button class="currency-btn ${budgetCurrency==='TWD'?'active':''}" data-cur="TWD" onclick="setCurrency('TWD')">NT$ TWD</button>
+      <button class="currency-btn ${budgetCurrency==='USD'?'active':''}" data-cur="USD" onclick="setCurrency('USD')">$ USD</button>
+    </div>
+    <div class="budget-section">
+      <div class="budget-total-bar">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.72rem;color:var(--ink4)">總花費估算</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--accent)">${formatMoney(total)}</span>
+        </div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:${total>0?100:0}%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.64rem;color:var(--ink4);font-family:'DM Mono',monospace">
+          <span>${allDays.length} 天 · ${allDays.reduce((a,d)=>a+(d.stops||[]).length,0)} 景點</span>
+          <span>均 ${total>0&&allDays.length ? formatMoney(Math.round(total/allDays.length)) : '—'}/天</span>
+        </div>
+      </div>
+      <div class="budget-section-title">分類明細</div>
+      <div class="budget-cat-grid">
+        ${Object.entries(cats).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+          <div class="budget-cat-row">
+            <div class="budget-cat-icon" style="background:${catColors[k]}20;color:${catColors[k]}">${catSVG[k]}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="budget-cat-name">${catNames[k]}</span>
+                <span class="budget-cat-amount">${formatMoney(v)}</span>
+              </div>
+              <div style="height:3px;border-radius:2px;margin-top:5px;background:${catColors[k]}25">
+                <div style="height:3px;border-radius:2px;background:${catColors[k]};width:${Math.round(v/maxCat*100)}%;transition:width .6s ease"></div>
+              </div>
+              <div style="font-size:.6rem;color:var(--ink4);font-family:'DM Mono',monospace;margin-top:3px">${total>0?Math.round(v/total*100):0}%</div>
+            </div>
+          </div>`).join('')}
+        ${Object.values(cats).every(v=>v===0) ? '<div style="text-align:center;color:var(--ink4);font-size:.82rem;padding:16px 0">尚無費用資料 — 在景點和憑證中輸入費用</div>' : ''}
+      </div>
+      ${dayRows.length ? `
+      <div class="budget-section-title">每日明細</div>
+      <div class="budget-day-table">
+        ${dayRows.map(r=>`
+          <div class="budget-day-row">
+            <span class="budget-day-label">${r.label}</span>
+            <span class="budget-day-name">${r.name}</span>
+            <span class="budget-day-amount">${formatMoney(r.amt)}</span>
+          </div>`).join('')}
+        <div class="budget-day-row" style="background:rgba(139,69,19,.04)">
+          <span class="budget-day-label" style="background:rgba(139,69,19,.18)">合計</span>
+          <span class="budget-day-name" style="color:var(--ink);font-weight:500">所有行程</span>
+          <span class="budget-day-amount" style="color:var(--accent);font-weight:600">${formatMoney(total)}</span>
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
+// ── CHECKLIST ──
+const DEFAULT_CHECKLIST_CATS = {
+  '文件證件': ['護照','JR Pass / SUICA','信用卡','現金日幣','旅遊保險文件','訂房確認信'],
+  '衣物': ['衣服（依天數準備）','薄外套 / 防風衣','舒適步行鞋','雨傘或折疊傘','帽子','睡衣'],
+  '電子設備': ['手機充電線','轉換插頭（日規A型）','行動電源','相機 + 記憶卡','耳機'],
+  '盥洗用品': ['牙刷牙膏','洗面乳','保濕乳液','防曬乳','個人藥品 / 感冒藥'],
+  '旅行輔助': ['頸枕','眼罩 + 耳塞','壓縮袋','小夾鏈袋','購物環保袋']
+};
+let checklistState = {};
+
+function loadChecklist() {
+  try {
+    const saved = localStorage.getItem('tokyo_checklist');
+    checklistState = saved ? JSON.parse(saved) : {};
+  } catch(e) { checklistState = {}; }
+}
+
+function saveChecklist() {
+  try { localStorage.setItem('tokyo_checklist', JSON.stringify(checklistState)); } catch(e) {}
+}
+
+function toggleChecklistItem(key) {
+  checklistState[key] = !checklistState[key];
+  saveChecklist();
+  renderChecklistPage();
+  if (navigator.vibrate) navigator.vibrate(8);
+}
+
+function addChecklistItem() {
+  const input = document.getElementById('checklistAddInput');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  const customs = JSON.parse(localStorage.getItem('tokyo_checklist_customs')||'[]');
+  if (!customs.includes(val)) { customs.push(val); localStorage.setItem('tokyo_checklist_customs', JSON.stringify(customs)); }
+  checklistState['自訂_'+val] = false;
+  saveChecklist();
+  input.value = '';
+  renderChecklistPage();
+}
+
+function renderChecklistPage() {
+  const el = document.getElementById('checklistContent');
+  if (!el) return;
+  const customs = JSON.parse(localStorage.getItem('tokyo_checklist_customs')||'[]');
+  const allCats = {...DEFAULT_CHECKLIST_CATS};
+  if (customs.length) allCats['自訂'] = customs;
+
+  let total = 0, checked = 0;
+  Object.entries(allCats).forEach(([cat, items]) => {
+    items.forEach(item => {
+      total++;
+      if (checklistState[cat+'_'+item]) checked++;
+    });
+  });
+  const pct = total ? Math.round(checked/total*100) : 0;
+
+  el.innerHTML = `
+    <div class="checklist-progress-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:.76rem;color:var(--ink2);font-weight:500">行李整理進度</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent)">${checked} / ${total}</span>
+      </div>
+      <div class="checklist-progress-bar"><div class="checklist-progress-fill" style="width:${pct}%"></div></div>
+      <div class="checklist-progress-label">${pct}% 完成${pct===100?' · 準備好出發了！':''}</div>
+    </div>
+    <div class="checklist-section">
+      ${Object.entries(allCats).map(([cat, items]) => `
+        <div class="checklist-cat-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          ${cat}
+        </div>
+        ${items.map(item => {
+          const key = cat+'_'+item;
+          const done = !!checklistState[key];
+          return `<div class="checklist-item ${done?'done':''}" onclick="toggleChecklistItem('${key.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
+            <div class="checklist-checkbox">${done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}</div>
+            <span class="checklist-item-name">${item}</span>
+          </div>`;
+        }).join('')}
+      `).join('')}
+    </div>
+    <div class="checklist-add-wrap">
+      <input class="checklist-add-input" id="checklistAddInput" placeholder="新增自訂項目…" onkeydown="if(event.key==='Enter')addChecklistItem()" aria-label="新增清單項目">
+      <button class="checklist-add-btn" onclick="addChecklistItem()" aria-label="新增">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>`;
 }
 
 init();
