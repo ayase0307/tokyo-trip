@@ -239,14 +239,35 @@ body::before{
 
 /* FAB */
 .fab{
-  position:fixed;bottom:calc(var(--nav-h)+14px);right:18px;
-  width:50px;height:50px;border-radius:14px;
+  position:fixed;
+  bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
+  right:18px;
+  width:52px;height:52px;border-radius:16px;
   background:var(--ink);color:var(--paper);
   border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(44,36,22,.28);transition:transform .15s,box-shadow .15s;z-index:50;
+  box-shadow:0 4px 20px rgba(44,36,22,.32);transition:transform .15s,box-shadow .15s;z-index:50;
 }
-.fab:active{transform:scale(.92)}
-.fab:hover{box-shadow:0 6px 20px rgba(44,36,22,.36)}
+.fab:active{transform:scale(.9)}
+.fab:hover{box-shadow:0 6px 24px rgba(44,36,22,.4)}
+
+/* ── PAGE SWIPE INDICATOR ── */
+.page-dots{display:flex;gap:5px;align-items:center;justify-content:center;padding:5px 0 0}
+.page-dot{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:all .2s;flex-shrink:0}
+.page-dot.active{width:16px;border-radius:3px;background:var(--accent)}
+
+/* ── HEADER BACK BTN ── */
+.header-back{width:34px;height:34px;border-radius:10px;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:all .2s;flex-shrink:0;margin-right:4px}
+.header-back:hover{background:var(--paper2);color:var(--ink)}
+
+/* ── MOBILE SHEET FORM ── */
+@media(max-width:480px){
+  .form-row2{grid-template-columns:1fr}
+  .stop-row-top{flex-wrap:wrap}
+  .stop-time-input{width:100px!important}
+}
+
+/* ── TRANSPORT / HOTEL HINT ── */
+.field-hint{font-size:.62rem;color:var(--ink4);margin-top:3px;line-height:1.4}
 
 /* ── MAP PAGE ── */
 .map-day-selector{
@@ -532,14 +553,15 @@ input[type="time"]{font-family:'DM Mono',monospace;font-size:.82rem}
 <div id="app">
   <div class="header">
     <div class="header-left">
-      <div class="header-title">東京 · <span>旅記</span></div>
+      <button class="header-back" id="headerBack" onclick="goBack()" aria-label="上一頁" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="header-title" id="headerTitle">東京 · <span>旅記</span></div>
     </div>
     <div class="header-right">
-      <div class="sync-pill"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">即時同步</span></div>
+      <div class="page-dots" id="pageDots"></div>
+      <div class="sync-pill"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">同步</span></div>
       <div class="time-pill" id="tokyoTimePill" title="東京時間">JST --:--</div>
-      <button class="header-btn" onclick="exportItinerary()" aria-label="匯出行程">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-      </button>
       <button class="header-btn" onclick="toggleDark()" id="darkBtn" aria-label="切換深色模式">
         <svg id="darkIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
@@ -670,6 +692,25 @@ input[type="time"]{font-family:'DM Mono',monospace;font-size:.82rem}
         <option value="吉祥寺"><option value="巢鴨"><option value="谷中"><option value="大塚">
         <option value="目黑"><option value="中目黑"><option value="表參道"><option value="日比谷">
         <option value="丸之內"><option value="淺草橋"><option value="押上">
+        <option value="池袋・大塚"><option value="原宿・澀谷"><option value="秋葉原・淺草">
+        <option value="築地・東京站・銀座"><option value="台場・新宿"><option value="巢鴨・谷中">
+      </datalist>
+      <datalist id="hotelList">
+        <option value="東橫INN 大塚站北口"><option value="HOTEL METROPOLITAN TOKYO IKEBUKURO">
+        <option value="Dormy Inn 池袋"><option value="Sotetsu Fresa Inn 東京錦糸町">
+        <option value="APA Hotel 新宿歌舞伎町"><option value="Keio Plaza Hotel 新宿">
+        <option value="shibuya stream excel hotel tokyu"><option value="Dormy Inn 澀谷">
+        <option value="SEQUENCE MIYASHITA PARK"><option value="Mitsui Garden Hotel 銀座">
+        <option value="Hotel Gracery 新宿"><option value="Villa Fontaine 淺草">
+      </datalist>
+      <datalist id="transportList">
+        <option value="成田Express (N'EX)"><option value="利木津巴士 (Airport Limousine)">
+        <option value="JR山手線"><option value="JR中央線"><option value="JR常磐線">
+        <option value="東京地鐵 丸之內線"><option value="東京地鐵 銀座線"><option value="東京地鐵 日比谷線">
+        <option value="東京地鐵 半藏門線"><option value="都營淺草線"><option value="都營大江戶線">
+        <option value="ゆりかもめ"><option value="京急線"><option value="西武池袋線">
+        <option value="東急東橫線"><option value="計程車"><option value="步行">
+        <option value="JR / 地鐵"><option value="IC卡 (Suica)">
       </datalist>
       <datalist id="stopList">
         <option value="住宿"><option value="飯店 Check-in"><option value="飯店 Check-out">
@@ -690,32 +731,32 @@ input[type="time"]{font-family:'DM Mono',monospace;font-size:.82rem}
 
       <div class="form-row2">
         <div class="form-group">
-          <label for="f_day">第幾天</label>
-          <input type="text" id="f_day" placeholder="Day 1" autocomplete="off">
+          <label for="f_date">日期 <span style="color:var(--accent);font-size:.65rem">（必填）</span></label>
+          <input type="date" id="f_date" min="2026-01-01" max="2027-12-31" onchange="onDateChange(this.value)">
         </div>
         <div class="form-group">
-          <label for="f_date">日期</label>
-          <input type="date" id="f_date" min="2026-01-01" max="2027-12-31">
+          <label for="f_day">第幾天</label>
+          <input type="text" id="f_day" placeholder="Day 1（自動填入）" autocomplete="off" readonly style="background:var(--paper3);color:var(--ink3);cursor:default">
         </div>
       </div>
       <div class="form-row2">
         <div class="form-group">
-          <label for="f_city">區域 / 城市</label>
-          <input type="text" id="f_city" list="cityList" placeholder="池袋、澀谷…" autocomplete="off">
+          <label for="f_city">區域 / 城市 <span style="color:var(--accent);font-size:.65rem">（必填）</span></label>
+          <input type="text" id="f_city" list="cityList" placeholder="選擇或輸入區域…" autocomplete="off">
         </div>
         <div class="form-group">
           <label for="f_dest">景點摘要</label>
-          <input type="text" id="f_dest" placeholder="淺草、上野">
+          <input type="text" id="f_dest" placeholder="淺草、上野…">
         </div>
       </div>
       <div class="form-row2">
         <div class="form-group">
-          <label for="f_hotel">住宿</label>
-          <input type="text" id="f_hotel" placeholder="飯店名稱">
+          <label for="f_hotel">住宿飯店</label>
+          <input type="text" id="f_hotel" list="hotelList" placeholder="飯店名稱">
         </div>
         <div class="form-group">
-          <label for="f_transport">交通</label>
-          <input type="text" id="f_transport" placeholder="JR、地鐵">
+          <label for="f_transport">主要交通</label>
+          <input type="text" id="f_transport" list="transportList" placeholder="JR、地鐵…">
         </div>
       </div>
 
@@ -855,6 +896,7 @@ function renderAll() {
   renderCredsPage();
   renderMapSelector();
   renderFilterChips();
+  updateHeaderNav(currentPage);
   if (currentPage === 'budget') renderBudgetPage();
 }
 
@@ -894,12 +936,23 @@ async function fetchWeatherForDays() {
 
 function parseDate(dateStr) {
   if (!dateStr) return null;
-  // Supports "4/25 (五)" → "2026-04-25"
+  // Handle ISO format: "2026-04-25"
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+  // Handle "4/25 (五)" → "2026-04-25"
   const m = dateStr.match(/(\d+)\/(\d+)/);
   if (!m) return null;
   const month = String(m[1]).padStart(2,'0');
   const day = String(m[2]).padStart(2,'0');
   return `2026-${month}-${day}`;
+}
+
+// Convert ISO date "2026-04-25" → display "4/25 (六)"
+function fmtDate(isoDate) {
+  if (!isoDate) return '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return isoDate; // already formatted
+  const d = new Date(isoDate + 'T12:00:00');
+  const wdays = ['日','一','二','三','四','五','六'];
+  return `${d.getMonth()+1}/${d.getDate()} (${wdays[d.getDay()]})`;
 }
 
 function weatherEmoji(code) {
@@ -1181,6 +1234,10 @@ function filterDays() {
   renderDaysList(days);
 }
 
+// ── PAGE ORDER & LABELS ──
+const PAGE_ORDER = ['itinerary','map','budget','creds','checklist'];
+const PAGE_LABELS = {itinerary:'行程',map:'地圖',budget:'預算',creds:'憑證',checklist:'清單'};
+
 // ── PAGE SWITCH ──
 function switchPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1190,6 +1247,7 @@ function switchPage(name) {
   navEl.classList.add('active'); navEl.setAttribute('aria-selected','true');
   currentPage = name;
   document.getElementById('fab').style.display = name==='itinerary' ? '' : 'none';
+  updateHeaderNav(name);
   if (name==='map' && allDays.length) {
     const id = mapDayId ?? allDays[0].id;
     renderMapForDay(id);
@@ -1197,6 +1255,52 @@ function switchPage(name) {
   if (name==='budget') renderBudgetPage();
   if (name==='checklist') renderChecklistPage();
 }
+
+function updateHeaderNav(name) {
+  const idx = PAGE_ORDER.indexOf(name);
+  // Back button: show when not on first page
+  const backBtn = document.getElementById('headerBack');
+  if (backBtn) backBtn.style.display = idx > 0 ? '' : 'none';
+  // Page dots
+  const dots = document.getElementById('pageDots');
+  if (dots) {
+    dots.innerHTML = PAGE_ORDER.map((p,i) => `<div class="page-dot ${i===idx?'active':''}"></div>`).join('');
+  }
+  // Header title: show current page name (except itinerary shows trip name)
+  const titleEl = document.getElementById('headerTitle');
+  if (titleEl) {
+    titleEl.innerHTML = name === 'itinerary'
+      ? '東京 · <span style="color:var(--accent)">旅記</span>'
+      : PAGE_LABELS[name];
+  }
+}
+
+function goBack() {
+  const idx = PAGE_ORDER.indexOf(currentPage);
+  if (idx > 0) switchPage(PAGE_ORDER[idx - 1]);
+}
+
+// ── SWIPE PAGE NAVIGATION ──
+(function initSwipe() {
+  let sx = 0, sy = 0, sTarget = null;
+  document.getElementById('app').addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    sTarget = e.target;
+  }, { passive: true });
+  document.getElementById('app').addEventListener('touchend', e => {
+    // Don't trigger on sheet, form inputs, or scrollable stops/lists
+    if (document.getElementById('sheetOverlay').classList.contains('open')) return;
+    if (sTarget && (sTarget.closest('.sheet') || sTarget.closest('input') || sTarget.closest('select') || sTarget.closest('textarea'))) return;
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    // Require predominantly horizontal movement (>55px) and not vertical scroll
+    if (Math.abs(dx) < 55 || Math.abs(dy) > Math.abs(dx) * 0.75) return;
+    const idx = PAGE_ORDER.indexOf(currentPage);
+    if (dx < 0 && idx < PAGE_ORDER.length - 1) switchPage(PAGE_ORDER[idx + 1]); // left = forward
+    if (dx > 0 && idx > 0) switchPage(PAGE_ORDER[idx - 1]); // right = back
+  }, { passive: true });
+})();
 
 // ── MAP ──
 function renderMapSelector() {
@@ -1349,15 +1453,20 @@ function openEditSheet(id) {
   const d = allDays.find(x => x.id===id); if (!d) return;
   editingId = id;
   document.getElementById('sheetTitle').textContent = '編輯行程日';
-  document.getElementById('f_day').value = d.day||'';
-  document.getElementById('f_date').value = d.date||'';
+  // Convert stored date format back to ISO for the date picker
+  const dayEl = document.getElementById('f_day');
+  const dateEl = document.getElementById('f_date');
+  dayEl.value = d.day||'';
+  // Parse stored date to ISO for date input
+  const iso = parseDate(d.date||'');
+  dateEl.value = iso || '';
   document.getElementById('f_city').value = d.city||'';
   document.getElementById('f_dest').value = d.dest||'';
   document.getElementById('f_itin').value = d.itin||'';
   document.getElementById('f_hotel').value = d.hotel||'';
   document.getElementById('f_transport').value = d.transport||'';
   document.getElementById('f_notes').value = d.notes||'';
-  document.getElementById('f_mood').value = d.mood||'';
+  selectMoodBtn(d.mood||'');
   stopRows = (d.stops||[]).map(s => ({...s}));
   credRows = (d.creds||[]).map(c => ({...c}));
   renderStopRows(); renderCredRows();
@@ -1366,9 +1475,27 @@ function openEditSheet(id) {
 function closeSheet() { document.getElementById('sheetOverlay').classList.remove('open'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('sheetOverlay')) closeSheet(); }
 function clearForm() {
-  ['f_day','f_date','f_city','f_dest','f_itin','f_hotel','f_transport','f_notes'].forEach(id => document.getElementById(id).value = '');
+  ['f_date','f_city','f_dest','f_itin','f_hotel','f_transport','f_notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f_day').value = '';
   document.getElementById('f_mood').value = '';
   selectMoodBtn('');
+}
+
+// Auto-fill Day number when date changes
+function onDateChange(isoVal) {
+  const dayEl = document.getElementById('f_day');
+  if (!isoVal) { dayEl.value = ''; return; }
+  const tripStart = new Date('2026-04-25T00:00:00');
+  const sel = new Date(isoVal + 'T00:00:00');
+  const diff = Math.round((sel - tripStart) / 86400000) + 1;
+  if (diff >= 1 && diff <= 30) dayEl.value = `Day ${diff}`;
+  else dayEl.value = '';
+  // Auto-suggest city if matching preset date
+  const presetDay = PRESET_DATA.find(p => parseDate(p.date) === isoVal);
+  if (presetDay && !document.getElementById('f_city').value) {
+    document.getElementById('f_city').value = presetDay.city;
+    document.getElementById('f_dest').value = presetDay.dest || '';
+  }
 }
 
 // ── MOOD PICKER ──
@@ -1430,25 +1557,46 @@ function renderCredRows() {
 // ── SAVE / DELETE ──
 async function saveDay() {
   const btn = document.getElementById('saveBtn');
+  // Validate required fields
+  const cityVal = v('f_city');
+  const dateVal = v('f_date');
+  if (!cityVal) { toast('請填入區域 / 城市', 'err'); document.getElementById('f_city').focus(); return; }
+
   btn.disabled = true; btn.textContent = '儲存中…';
-  const payload = {
-    day: v('f_day'), date: v('f_date'), city: v('f_city'), dest: v('f_dest'),
-    itin: v('f_itin'), hotel: v('f_hotel'), transport: v('f_transport'),
-    notes: v('f_notes'), mood: document.getElementById('f_mood').value,
-    stops: stopRows, creds: credRows,
-    // BUG FIX: sort_order uses max existing + 1, not allDays.length
-    sort_order: editingId
-      ? (allDays.find(d => d.id===editingId)?.sort_order ?? 0)
-      : (allDays.length ? Math.max(...allDays.map(d => d.sort_order ?? 0)) + 1 : 0),
-    updated_at: new Date().toISOString()
-  };
-  const { error } = editingId
-    ? await sb.from('trips').update(payload).eq('id', editingId)
-    : await sb.from('trips').insert(payload);
-  btn.disabled = false; btn.textContent = '儲存行程';
-  if (error) { toast('儲存失敗', 'err'); return; }
-  toast(editingId ? '已更新 ✓' : '已新增 ✓', 'success');
-  closeSheet(); await loadDays();
+  try {
+    const payload = {
+      day: v('f_day') || (dateVal ? 'Day ?' : ''),
+      date: fmtDate(dateVal),
+      city: cityVal,
+      dest: v('f_dest'),
+      itin: v('f_itin'),
+      hotel: v('f_hotel'),
+      transport: v('f_transport'),
+      notes: v('f_notes'),
+      mood: document.getElementById('f_mood').value,
+      stops: stopRows.map(s => ({...s})),
+      creds: credRows.map(c => ({...c})),
+      sort_order: editingId
+        ? (allDays.find(d => d.id===editingId)?.sort_order ?? 0)
+        : (allDays.length ? Math.max(...allDays.map(d => d.sort_order ?? 0)) + 1 : 0),
+      updated_at: new Date().toISOString()
+    };
+    const { error } = editingId
+      ? await sb.from('trips').update(payload).eq('id', editingId)
+      : await sb.from('trips').insert(payload);
+    if (error) {
+      console.error('Supabase save error:', error);
+      toast('儲存失敗：' + (error.message || error.code || JSON.stringify(error)), 'err');
+      return;
+    }
+    toast(editingId ? '已更新 ✓' : '已新增 ✓', 'success');
+    closeSheet(); await loadDays();
+  } catch(e) {
+    console.error('saveDay exception:', e);
+    toast('儲存失敗：' + (e.message || String(e)), 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '儲存行程';
+  }
 }
 
 async function deleteDay(id) {
@@ -1866,16 +2014,33 @@ const PRESET_DATA = [
 async function importPresetItinerary() {
   const btn = document.getElementById('importPresetBtn');
   if (btn) { btn.disabled = true; btn.textContent = '匯入中…'; }
-  let ok = 0;
-  for (let i = 0; i < PRESET_DATA.length; i++) {
-    const d = PRESET_DATA[i];
-    const payload = { ...d, sort_order: i, updated_at: new Date().toISOString() };
-    const { error } = await sb.from('trips').insert(payload);
-    if (!error) ok++;
+  let ok = 0, lastError = null;
+  try {
+    for (let i = 0; i < PRESET_DATA.length; i++) {
+      const d = PRESET_DATA[i];
+      const payload = {
+        day: d.day, date: d.date, city: d.city, dest: d.dest,
+        hotel: d.hotel, transport: d.transport, mood: d.mood,
+        itin: d.itin || '', notes: d.notes || '',
+        stops: d.stops || [], creds: d.creds || [],
+        sort_order: i, updated_at: new Date().toISOString()
+      };
+      const { error } = await sb.from('trips').insert(payload);
+      if (!error) ok++;
+      else { lastError = error; console.error('Import row', i, 'error:', error); }
+    }
+  } catch(e) {
+    lastError = e;
+    console.error('importPresetItinerary exception:', e);
   }
   if (btn) { btn.disabled = false; btn.textContent = '匯入行程'; }
-  if (ok > 0) { toast(`已匯入 ${ok} 天行程 ✓`, 'success'); await loadDays(); }
-  else toast('匯入失敗，請重試', 'err');
+  if (ok > 0) {
+    toast(`已匯入 ${ok} 天行程 ✓`, 'success');
+    await loadDays();
+  } else {
+    const msg = lastError?.message || lastError?.code || lastError?.hint || JSON.stringify(lastError);
+    toast('匯入失敗：' + msg, 'err');
+  }
 }
 
 // ── FILTER CHIPS ──
