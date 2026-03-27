@@ -428,6 +428,104 @@ svg{display:block}
 /* NAV 5-ITEM SIZING */
 .nav-label{font-size:.52rem;letter-spacing:.05em;font-weight:500;text-transform:uppercase}
 .nav-icon{width:20px;height:20px;transition:transform .2s}
+/* Active nav top indicator */
+.nav-item{position:relative}
+.nav-item.active::after{content:'';position:absolute;top:0;left:25%;right:25%;height:2.5px;background:var(--accent);border-radius:0 0 3px 3px}
+
+/* ── CARD MODERNIZATION ── */
+/* Replace harsh left border with top color bar */
+.day-card{border-left-width:0;border-top:3px solid var(--accent2)}
+.day-card[data-mood="sakura"]{border-top-color:var(--mood-sakura);border-left-color:transparent}
+.day-card[data-mood="city"]{border-top-color:var(--mood-city);border-left-color:transparent}
+.day-card[data-mood="food"]{border-top-color:var(--mood-food);border-left-color:transparent}
+.day-card[data-mood="shrine"]{border-top-color:var(--mood-shrine);border-left-color:transparent}
+.day-card[data-mood="shopping"]{border-top-color:var(--mood-shopping);border-left-color:transparent}
+.day-card[data-mood="night"]{border-top-color:var(--mood-night);border-left-color:transparent}
+/* Bolder day badge */
+.day-badge{font-size:.65rem;letter-spacing:.06em;padding:4px 9px;border-radius:8px}
+/* Better card title */
+.day-card-city{font-size:1.08rem;font-weight:500;letter-spacing:.01em}
+/* Improved stop timeline dot */
+.stop-mini-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;box-shadow:0 0 0 3px rgba(193,127,58,.15)}
+/* Colored dots by type */
+.stop-mini[data-type="food"] .stop-mini-dot{background:#c9843a;box-shadow:0 0 0 3px rgba(201,132,58,.15)}
+.stop-mini[data-type="transport"] .stop-mini-dot{background:#6a7a8a;box-shadow:0 0 0 3px rgba(106,122,138,.15)}
+.stop-mini[data-type="hotel"] .stop-mini-dot{background:#4a7c59;box-shadow:0 0 0 3px rgba(74,124,89,.15)}
+.stop-mini[data-type="shopping"] .stop-mini-dot{background:#a07ab0;box-shadow:0 0 0 3px rgba(160,122,176,.15)}
+.stop-mini[data-type="sightseeing"] .stop-mini-dot{background:#3a6a9a;box-shadow:0 0 0 3px rgba(58,106,154,.15)}
+/* Better stat cards */
+.hero-stats{border-radius:16px;margin-top:18px}
+.stat-num{font-size:1.6rem}
+
+/* ── MOOD VISUAL PICKER ── */
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:2px}
+.mood-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 7px;border-radius:11px;border:1.5px solid var(--border2);background:var(--paper2);cursor:pointer;transition:all .15s;font-size:.62rem;color:var(--ink3);font-family:'Noto Sans TC',sans-serif;line-height:1.3;width:100%}
+.mood-btn:hover{background:var(--paper3);transform:translateY(-1px)}
+.mood-btn.selected{font-weight:500}
+.mood-btn.selected[data-val=""]{border-color:var(--ink3);background:var(--paper3);color:var(--ink2)}
+.mood-btn.selected[data-val="sakura"]{background:#fce8ee;border-color:#d06080;color:#b04070}
+.mood-btn.selected[data-val="city"]{background:#e0ebf5;border-color:#3a7aaa;color:#1a5a8a}
+.mood-btn.selected[data-val="food"]{background:#fde8d0;border-color:#c07830;color:#905020}
+.mood-btn.selected[data-val="shrine"]{background:#e0f0e0;border-color:#3a8050;color:#1a6030}
+.mood-btn.selected[data-val="shopping"]{background:#f0e0f5;border-color:#8a4a9a;color:#6a2a7a}
+.mood-btn.selected[data-val="night"]{background:#e0e0f0;border-color:#3a4a8a;color:#1a3070}
+
+/* ── STOP TYPE BUTTON GRID ── */
+.type-grid{display:flex;flex-wrap:wrap;gap:5px;padding:4px 0 6px}
+.type-btn{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border2);background:var(--paper2);font-size:.67rem;cursor:pointer;transition:all .12s;color:var(--ink3);font-family:'Noto Sans TC',sans-serif;white-space:nowrap}
+.type-btn:hover{opacity:.8}
+.type-btn.sel-sightseeing{background:#e8f0f8;border-color:#3a6aaa;color:#1a4a8a;font-weight:500}
+.type-btn.sel-food{background:#fdf0e0;border-color:#c07830;color:#905020;font-weight:500}
+.type-btn.sel-transport{background:#eeecea;border-color:#7a6a58;color:#5a4a38;font-weight:500}
+.type-btn.sel-hotel{background:#e8f4ec;border-color:#3a7a52;color:#1a5a32;font-weight:500}
+.type-btn.sel-shopping{background:#f4e8f4;border-color:#8a4a9a;color:#6a2a7a;font-weight:500}
+.type-btn.sel-other{background:var(--paper3);border-color:var(--ink4);color:var(--ink3);font-weight:500}
+
+/* ── FORM IMPROVEMENTS ── */
+.form-section-divider{font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);display:flex;align-items:center;gap:9px;margin:18px 0 10px}
+.form-section-divider::before,.form-section-divider::after{content:'';flex:1;height:1px;background:var(--border2)}
+input[type="date"]{font-family:'DM Mono',monospace}
+input[type="time"]{font-family:'DM Mono',monospace;font-size:.82rem}
+
+/* ── FILTER CHIPS ── */
+.filter-chips{padding:6px 18px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.filter-chips::-webkit-scrollbar{display:none}
+.filter-chip{flex-shrink:0;display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border2);background:var(--paper2);font-size:.7rem;cursor:pointer;transition:all .15s;color:var(--ink3);white-space:nowrap;font-family:'Noto Sans TC',sans-serif}
+.filter-chip:hover:not(.active-chip){background:var(--paper3);color:var(--ink)}
+.filter-chip.active-chip{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filter-chip.chip-sakura.active-chip{background:#b04070;border-color:#b04070;color:#fff}
+.filter-chip.chip-city.active-chip{background:#1a5a8a;border-color:#1a5a8a;color:#fff}
+.filter-chip.chip-food.active-chip{background:#905020;border-color:#905020;color:#fff}
+.filter-chip.chip-shrine.active-chip{background:#1a6030;border-color:#1a6030;color:#fff}
+.filter-chip.chip-shopping.active-chip{background:#6a2a7a;border-color:#6a2a7a;color:#fff}
+.filter-chip.chip-night.active-chip{background:#1a3070;border-color:#1a3070;color:#fff}
+
+/* ── IMPORT BANNER ── */
+.import-banner{margin:14px 18px 0;padding:14px 16px;background:linear-gradient(135deg,rgba(139,69,19,.07),rgba(193,127,58,.05));border:1px solid rgba(139,69,19,.18);border-radius:14px;display:flex;align-items:center;gap:12px}
+.import-banner-ico{font-size:1.5rem;flex-shrink:0}
+.import-banner-text{flex:1;min-width:0}
+.import-banner-title{font-size:.88rem;font-weight:500;color:var(--ink)}
+.import-banner-sub{font-size:.7rem;color:var(--ink3);margin-top:2px}
+.import-btn{background:var(--accent);color:white;border:none;border-radius:10px;padding:8px 14px;font-size:.78rem;cursor:pointer;white-space:nowrap;font-family:'Noto Sans TC',sans-serif;font-weight:500;transition:opacity .15s;flex-shrink:0}
+.import-btn:hover{opacity:.85}
+.import-btn:active{opacity:.7}
+
+/* Modern day-select tabs */
+.day-tab-bar{padding:10px 18px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.day-tab-bar::-webkit-scrollbar{display:none}
+.day-tab{flex-shrink:0;padding:5px 13px;border-radius:20px;border:1.5px solid var(--border2);background:var(--paper2);font-size:.72rem;cursor:pointer;transition:all .15s;color:var(--ink3);white-space:nowrap;font-family:'DM Mono',monospace}
+.day-tab:hover:not(.active-tab){background:var(--paper3);color:var(--ink)}
+.day-tab.active-tab{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* Stop row card improvements */
+.stop-row-card{background:var(--paper2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;margin-bottom:8px;transition:box-shadow .15s}
+.stop-row-card:focus-within{box-shadow:0 0 0 2px rgba(139,69,19,.18);border-color:rgba(139,69,19,.3)}
+.stop-row-top{display:flex;gap:7px;align-items:center;margin-bottom:7px}
+.stop-row-bot{display:grid;grid-template-columns:1fr 90px;gap:7px}
+.stop-type-select{font-size:.72rem;padding:7px 8px;border-radius:8px;font-family:'Noto Sans TC',sans-serif}
+.stop-time-input{font-family:'DM Mono',monospace;font-size:.8rem;padding:7px 9px;border-radius:8px;min-width:0;width:100%}
+.stop-name-input{flex:1;font-size:.82rem;padding:7px 10px;border-radius:8px}
+.cred-row-card{background:var(--paper2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -452,8 +550,8 @@ svg{display:block}
     <!-- 行程 -->
     <div class="page active" id="page-itinerary">
       <div class="page-hero">
-        <div class="hero-eyebrow">TOKYO · APRIL 2026</div>
-        <div class="hero-title">春日<em>東京</em><br>旅行記</div>
+        <div class="hero-eyebrow">2026.04.25 — 04.30 · TOKYO</div>
+        <div class="hero-title">東京<em>泡泡澡</em></div>
         <div class="hero-meta">
           <div class="hero-countdown" id="heroCountdown">計算中…</div>
           <div class="hero-progress-wrap">
@@ -481,6 +579,7 @@ svg{display:block}
           匯出行程
         </button>
       </div>
+      <div class="filter-chips" id="filterChips"></div>
       <div id="daysList" class="days-list"></div>
     </div>
 
@@ -562,50 +661,122 @@ svg{display:block}
       <button class="sheet-close" onclick="closeSheet()" aria-label="關閉">✕</button>
     </div>
     <div class="sheet-body">
+      <!-- City datalist for autocomplete -->
+      <datalist id="cityList">
+        <option value="池袋"><option value="新宿"><option value="澀谷"><option value="原宿">
+        <option value="銀座"><option value="秋葉原"><option value="淺草"><option value="上野">
+        <option value="築地"><option value="台場"><option value="六本木"><option value="赤坂">
+        <option value="品川"><option value="惠比壽"><option value="自由之丘"><option value="下北澤">
+        <option value="吉祥寺"><option value="巢鴨"><option value="谷中"><option value="大塚">
+        <option value="目黑"><option value="中目黑"><option value="表參道"><option value="日比谷">
+        <option value="丸之內"><option value="淺草橋"><option value="押上">
+      </datalist>
+      <datalist id="stopList">
+        <option value="住宿"><option value="飯店 Check-in"><option value="飯店 Check-out">
+        <option value="成田國際機場 NRT"><option value="羽田機場 HND"><option value="臺灣桃園國際機場 TPE">
+        <option value="秋葉原"><option value="淺草寺 雷門"><option value="明治神宮">
+        <option value="東京鐵塔"><option value="東京晴空塔"><option value="澀谷 SKY">
+        <option value="渋谷スクランブル交差点"><option value="忠犬八公像">
+        <option value="太陽城"><option value="池袋PARCO 本館"><option value="澀谷PARCO">
+        <option value="東京站一番街"><option value="GINZA SIX"><option value="銀座">
+        <option value="表參道Hills"><option value="仲見世商店街"><option value="巢鴨地藏通商店街">
+        <option value="谷中銀座商店街"><option value="上野阿美橫町">
+        <option value="森美術館"><option value="東京築地市場"><option value="築地魚河岸">
+        <option value="獨角獸鋼彈"><option value="Tokyo Joypolis"><option value="歌舞伎町一番街">
+        <option value="Pokémon Center"><option value="animate 池袋總店">
+        <option value="HANDS 澀谷店"><option value="Uniqlo Ginza Flagship Store">
+        <option value="一蘭拉麵"><option value="すき家"><option value="吉野家">
+      </datalist>
+
       <div class="form-row2">
-        <div class="form-group"><label for="f_day">第幾天</label><input type="text" id="f_day" placeholder="Day 1"></div>
-        <div class="form-group"><label for="f_date">日期</label><input type="text" id="f_date" placeholder="4/25 (五)"></div>
-      </div>
-      <div class="form-row2">
-        <div class="form-group"><label for="f_city">城市</label><input type="text" id="f_city" placeholder="東京"></div>
-        <div class="form-group"><label for="f_dest">目的地摘要</label><input type="text" id="f_dest" placeholder="淺草、上野"></div>
-      </div>
-      <div class="form-row2">
-        <div class="form-group"><label for="f_hotel">住宿飯店</label><input type="text" id="f_hotel" placeholder="APA Hotel"></div>
-        <div class="form-group"><label for="f_transport">交通方式</label><input type="text" id="f_transport" placeholder="JR、地鐵"></div>
+        <div class="form-group">
+          <label for="f_day">第幾天</label>
+          <input type="text" id="f_day" placeholder="Day 1" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="f_date">日期</label>
+          <input type="date" id="f_date" min="2026-01-01" max="2027-12-31">
+        </div>
       </div>
       <div class="form-row2">
         <div class="form-group">
-          <label for="f_mood">主題標籤</label>
-          <select id="f_mood">
-            <option value="">無</option>
-            <option value="sakura">🌸 賞櫻</option>
-            <option value="city">🏙️ 城市</option>
-            <option value="food">🍜 美食</option>
-            <option value="shrine">⛩️ 神社</option>
-            <option value="shopping">🛍️ 購物</option>
-            <option value="night">🌃 夜景</option>
-          </select>
+          <label for="f_city">區域 / 城市</label>
+          <input type="text" id="f_city" list="cityList" placeholder="池袋、澀谷…" autocomplete="off">
         </div>
-        <div class="form-group"><label for="f_notes">備注</label><input type="text" id="f_notes" placeholder="其他提醒…"></div>
+        <div class="form-group">
+          <label for="f_dest">景點摘要</label>
+          <input type="text" id="f_dest" placeholder="淺草、上野">
+        </div>
       </div>
-      <div class="form-group"><label for="f_itin">行程說明</label><textarea id="f_itin" placeholder="今日主要行程…"></textarea></div>
+      <div class="form-row2">
+        <div class="form-group">
+          <label for="f_hotel">住宿</label>
+          <input type="text" id="f_hotel" placeholder="飯店名稱">
+        </div>
+        <div class="form-group">
+          <label for="f_transport">交通</label>
+          <input type="text" id="f_transport" placeholder="JR、地鐵">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>主題標籤</label>
+        <!-- Hidden select for compatibility -->
+        <select id="f_mood" style="display:none" aria-hidden="true">
+          <option value="">無</option><option value="sakura">賞櫻</option>
+          <option value="city">城市</option><option value="food">美食</option>
+          <option value="shrine">神社</option><option value="shopping">購物</option>
+          <option value="night">夜景</option>
+        </select>
+        <div class="mood-grid" id="moodGrid">
+          <button class="mood-btn selected" data-val="" type="button" onclick="selectMoodBtn('')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>無
+          </button>
+          <button class="mood-btn" data-val="sakura" type="button" onclick="selectMoodBtn('sakura')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 5c0-2 1.5-3 2-1.5S15 6 12 9c-3-3-3-4.5-2-5.5S12 3 12 5z"/><path d="M12 19c0 2-1.5 3-2 1.5S9 18 12 15c3 3 3 4.5 2 5.5S12 21 12 19z"/><path d="M5 12c-2 0-3-1.5-1.5-2S6 9 9 12c-3 3-4.5 3-5.5 2S3 12 5 12z"/><path d="M19 12c2 0 3 1.5 1.5 2S18 15 15 12c3-3 4.5-3 5.5-2S21 12 19 12z"/></svg>賞櫻
+          </button>
+          <button class="mood-btn" data-val="city" type="button" onclick="selectMoodBtn('city')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>城市
+          </button>
+          <button class="mood-btn" data-val="food" type="button" onclick="selectMoodBtn('food')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>美食
+          </button>
+          <button class="mood-btn" data-val="shrine" type="button" onclick="selectMoodBtn('shrine')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 7h18M5 7V5h14v2M12 3v2M8 7v14M16 7v14M4 21h16"/></svg>神社
+          </button>
+          <button class="mood-btn" data-val="shopping" type="button" onclick="selectMoodBtn('shopping')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>購物
+          </button>
+          <button class="mood-btn" data-val="night" type="button" onclick="selectMoodBtn('night')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>夜景
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="f_notes">備注提醒</label>
+        <input type="text" id="f_notes" placeholder="注意事項…">
+      </div>
+      <div class="form-group">
+        <label for="f_itin">行程說明</label>
+        <textarea id="f_itin" placeholder="今日主要行程概述…"></textarea>
+      </div>
 
       <div class="divider-label">景點行程</div>
       <div id="stopsEditor"></div>
-      <button class="add-row-btn" onclick="addStopRow()">
+      <button class="add-row-btn" onclick="addStopRow()" type="button">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         新增景點
       </button>
 
       <div class="divider-label">訂單 / 憑證</div>
       <div id="credsEditor"></div>
-      <button class="add-row-btn" onclick="addCredRow()">
+      <button class="add-row-btn" onclick="addCredRow()" type="button">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         新增憑證
       </button>
 
-      <button class="btn-save" onclick="saveDay()" id="saveBtn">儲存行程</button>
+      <button class="btn-save" onclick="saveDay()" id="saveBtn" type="button">儲存行程</button>
     </div>
   </div>
 </div>
@@ -683,6 +854,7 @@ function renderAll() {
   renderStats();
   renderCredsPage();
   renderMapSelector();
+  renderFilterChips();
   if (currentPage === 'budget') renderBudgetPage();
 }
 
@@ -818,10 +990,21 @@ function calcDayBudget(d) {
 function renderDaysList(days = allDays) {
   const el = document.getElementById('daysList');
   if (!days.length) {
-    el.innerHTML = `<div class="empty-state">
-      <div class="empty-kanji">旅</div>
-      <div class="empty-msg">還沒有行程<br><span style="font-size:.8rem;opacity:.7">點右下角 ＋ 開始規劃東京之旅</span></div>
-    </div>`;
+    const isFiltered = activeMoodFilter || document.getElementById('searchInput').value;
+    el.innerHTML = isFiltered
+      ? `<div class="empty-state"><div class="empty-kanji">搜</div><div class="empty-msg">沒有符合的行程<br><span style="font-size:.8rem;opacity:.7">請嘗試其他關鍵字或主題</span></div></div>`
+      : `<div class="import-banner">
+          <div class="import-banner-ico">🗾</div>
+          <div class="import-banner-text">
+            <div class="import-banner-title">東京泡泡澡 · 6天行程</div>
+            <div class="import-banner-sub">2026/04/25—04/30 · 共 6 天 · 池袋、澀谷、淺草、銀座…</div>
+          </div>
+          <button class="import-btn" id="importPresetBtn" onclick="importPresetItinerary()">匯入行程</button>
+        </div>
+        <div class="empty-state">
+          <div class="empty-kanji">旅</div>
+          <div class="empty-msg">還沒有行程<br><span style="font-size:.8rem;opacity:.7">點上方「匯入行程」快速載入，或右下角 ＋ 自行規劃</span></div>
+        </div>`;
     return;
   }
   el.innerHTML = days.map((d, i) => {
@@ -990,10 +1173,12 @@ function onDragEnd(e) {
 // ── FILTER ──
 function filterDays() {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  if (!q) { renderDaysList(); return; }
-  renderDaysList(allDays.filter(d =>
+  let days = allDays;
+  if (activeMoodFilter) days = days.filter(d => d.mood === activeMoodFilter);
+  if (q) days = days.filter(d =>
     [d.city, d.dest, d.hotel, d.itin, ...(d.stops||[]).map(s=>s.name)].some(v => (v||'').toLowerCase().includes(q))
-  ));
+  );
+  renderDaysList(days);
 }
 
 // ── PAGE SWITCH ──
@@ -1183,25 +1368,36 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('sheet
 function clearForm() {
   ['f_day','f_date','f_city','f_dest','f_itin','f_hotel','f_transport','f_notes'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f_mood').value = '';
+  selectMoodBtn('');
+}
+
+// ── MOOD PICKER ──
+function selectMoodBtn(val) {
+  document.getElementById('f_mood').value = val;
+  document.querySelectorAll('#moodGrid .mood-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.val === val);
+  });
 }
 
 // ── STOPS EDITOR ──
 function addStopRow() { stopRows.push({time:'',name:'',type:'sightseeing',note:'',cost:''}); renderStopRows(); }
 function renderStopRows() {
   document.getElementById('stopsEditor').innerHTML = stopRows.map((s, i) => `
-    <div class="dynamic-row stop-drow">
-      <input type="text" placeholder="時間" value="${esc(s.time)}" oninput="stopRows[${i}].time=this.value" style="font-size:.76rem;padding:8px 9px">
-      <input type="text" placeholder="景點名稱" value="${esc(s.name)}" oninput="stopRows[${i}].name=this.value" style="font-size:.76rem;padding:8px 9px">
-      <select onchange="stopRows[${i}].type=this.value" style="font-size:.71rem;padding:8px 5px 8px 7px">
-        ${['sightseeing','food','transport','hotel','shopping','other'].map(t => `<option value="${t}" ${s.type===t?'selected':''}>${typeLabel(t)}</option>`).join('')}
-      </select>
-      <button class="remove-row-btn" onclick="stopRows.splice(${i},1);renderStopRows()" aria-label="移除">✕</button>
-    </div>
-    <div class="stop-extra-row">
-      <input type="text" placeholder="備注（可選）" value="${esc(s.note)}" oninput="stopRows[${i}].note=this.value" style="font-size:.74rem;padding:7px 9px;border-radius:8px">
-      <div class="cost-input-wrap">
-        <span class="cost-prefix">¥</span>
-        <input type="number" placeholder="費用" value="${esc(s.cost)}" oninput="stopRows[${i}].cost=this.value" class="cost-input" style="font-size:.74rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
+    <div class="stop-row-card">
+      <div class="stop-row-top">
+        <input type="time" value="${esc(s.time)}" oninput="stopRows[${i}].time=this.value" class="stop-time-input" style="width:112px;flex-shrink:0" title="時間">
+        <input type="text" placeholder="景點 / 店家名稱" list="stopList" value="${esc(s.name)}" oninput="stopRows[${i}].name=this.value" class="stop-name-input">
+        <button class="remove-row-btn" onclick="stopRows.splice(${i},1);renderStopRows()" aria-label="移除" style="flex-shrink:0">✕</button>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <select onchange="stopRows[${i}].type=this.value" class="stop-type-select" style="flex-shrink:0;width:90px">
+          ${['sightseeing','food','transport','hotel','shopping','other'].map(t => `<option value="${t}" ${s.type===t?'selected':''}>${typeLabel(t)}</option>`).join('')}
+        </select>
+        <input type="text" placeholder="備注（可選）" value="${esc(s.note)}" oninput="stopRows[${i}].note=this.value" style="flex:1;font-size:.74rem;padding:7px 9px;border-radius:8px">
+        <div class="cost-input-wrap" style="width:88px;flex-shrink:0">
+          <span class="cost-prefix">¥</span>
+          <input type="number" placeholder="費用" value="${esc(s.cost)}" oninput="stopRows[${i}].cost=this.value" class="cost-input" style="font-size:.74rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
+        </div>
       </div>
     </div>
   `).join('');
@@ -1211,19 +1407,21 @@ function renderStopRows() {
 function addCredRow() { credRows.push({type:'hotel',label:'',url:'',note:'',cost:''}); renderCredRows(); }
 function renderCredRows() {
   document.getElementById('credsEditor').innerHTML = credRows.map((c, i) => `
-    <div class="dynamic-row cred-drow">
-      <select onchange="credRows[${i}].type=this.value" style="font-size:.71rem;padding:8px 5px 8px 7px">
-        ${['hotel','flight','ticket','other'].map(t => `<option value="${t}" ${c.type===t?'selected':''}>${credTypeLabel(t)}</option>`).join('')}
-      </select>
-      <input type="text" placeholder="名稱（如：ANA 訂位）" value="${esc(c.label)}" oninput="credRows[${i}].label=this.value" style="font-size:.76rem;padding:8px 9px">
-      <button class="remove-row-btn" onclick="credRows.splice(${i},1);renderCredRows()" aria-label="移除">✕</button>
-    </div>
-    <input type="url" placeholder="連結 URL（可選）" value="${esc(c.url)}" oninput="credRows[${i}].url=this.value" style="font-size:.73rem;padding:7px 9px;margin-bottom:5px;border-radius:8px">
-    <div class="stop-extra-row" style="margin-bottom:10px">
-      <input type="text" placeholder="備注（可選）" value="${esc(c.note)}" oninput="credRows[${i}].note=this.value" style="font-size:.73rem;padding:7px 9px;border-radius:8px">
-      <div class="cost-input-wrap">
-        <span class="cost-prefix">¥</span>
-        <input type="number" placeholder="費用" value="${esc(c.cost)}" oninput="credRows[${i}].cost=this.value" class="cost-input" style="font-size:.73rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
+    <div class="cred-row-card">
+      <div style="display:flex;gap:7px;align-items:center;margin-bottom:7px">
+        <select onchange="credRows[${i}].type=this.value" style="font-size:.72rem;padding:7px 8px;border-radius:8px;flex-shrink:0;width:85px">
+          ${['hotel','flight','ticket','other'].map(t => `<option value="${t}" ${c.type===t?'selected':''}>${credIcon(t)} ${credTypeLabel(t)}</option>`).join('')}
+        </select>
+        <input type="text" placeholder="名稱（如：ANA 訂位）" value="${esc(c.label)}" oninput="credRows[${i}].label=this.value" style="flex:1;font-size:.82rem;padding:7px 10px;border-radius:8px">
+        <button class="remove-row-btn" onclick="credRows.splice(${i},1);renderCredRows()" aria-label="移除" style="flex-shrink:0">✕</button>
+      </div>
+      <input type="url" placeholder="連結 URL（可選）" value="${esc(c.url)}" oninput="credRows[${i}].url=this.value" style="font-size:.73rem;padding:7px 9px;margin-bottom:7px;border-radius:8px;width:100%">
+      <div style="display:grid;grid-template-columns:1fr 90px;gap:7px">
+        <input type="text" placeholder="備注（可選）" value="${esc(c.note)}" oninput="credRows[${i}].note=this.value" style="font-size:.73rem;padding:7px 9px;border-radius:8px">
+        <div class="cost-input-wrap">
+          <span class="cost-prefix">¥</span>
+          <input type="number" placeholder="費用" value="${esc(c.cost)}" oninput="credRows[${i}].cost=this.value" class="cost-input" style="font-size:.73rem;padding:7px 9px 7px 24px;border-radius:8px" inputmode="numeric">
+        </div>
       </div>
     </div>
   `).join('');
@@ -1546,6 +1744,164 @@ function renderChecklistPage() {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
     </div>`;
+}
+
+// ── PRESET ITINERARY DATA ──
+const PRESET_DATA = [
+  {
+    day:'Day 1', date:'4/25 (六)', city:'池袋', dest:'太陽城・Pokémon Center・池袋PARCO',
+    hotel:'', transport:'成田機場→大塚', mood:'shopping',
+    stops:[
+      {time:'03:45',name:'TPE·臺灣桃園國際機場',type:'transport',note:'停留3小時',cost:''},
+      {time:'11:15',name:'NRT·成田國際機場',type:'transport',note:'停留1小時',cost:''},
+      {time:'13:09',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'13:45',name:'迴轉壽司 天下壽司 大塚店',type:'food',note:'停留1小時',cost:''},
+      {time:'15:04',name:'太陽城',type:'sightseeing',note:'',cost:''},
+      {time:'15:34',name:'Pokémon Center',type:'shopping',note:'',cost:''},
+      {time:'15:54',name:'Gashapon Ikebukuro Main Store',type:'shopping',note:'',cost:''},
+      {time:'16:37',name:'Himokawa-kiryu Ikebukuro',type:'food',note:'停留1小時',cost:''},
+      {time:'17:49',name:'池袋PARCO 本館',type:'shopping',note:'',cost:''},
+      {time:'18:36',name:'ESPRESSO D WORKS IKEBUKURO',type:'food',note:'停留1小時',cost:''},
+      {time:'19:39',name:'animate 池袋總店',type:'shopping',note:'',cost:''},
+      {time:'20:14',name:'Tanabe',type:'food',note:'停留1小時',cost:''},
+      {time:'21:32',name:'My Basket Otsukaeki North Exit',type:'shopping',note:'',cost:''},
+      {time:'22:10',name:'住宿',type:'hotel',note:'',cost:''},
+    ],creds:[]
+  },
+  {
+    day:'Day 2', date:'4/26 (日)', city:'原宿・澀谷', dest:'明治神宮・表參道・澀谷SKY・森美術館',
+    hotel:'', transport:'JR山手線', mood:'city',
+    stops:[
+      {time:'10:00',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'10:54',name:'明治神宮',type:'sightseeing',note:'',cost:''},
+      {time:'11:23',name:'Takeshita St',type:'sightseeing',note:'竹下通',cost:''},
+      {time:'12:05',name:'WIGGLE WIGGLE.ZIP HARAJUKU',type:'shopping',note:'',cost:''},
+      {time:'12:29',name:'表參道Hills',type:'shopping',note:'',cost:''},
+      {time:'13:14',name:'The Matcha Tokyo Omotesandō',type:'food',note:'',cost:''},
+      {time:'13:50',name:'Tsukishima Monja Kuuya Shibuya',type:'food',note:'停留1小時',cost:''},
+      {time:'14:53',name:'忠犬八公像',type:'sightseeing',note:'',cost:''},
+      {time:'15:04',name:'渋谷スクランブル交差点',type:'sightseeing',note:'',cost:''},
+      {time:'15:29',name:'Kenyan Shibuya',type:'food',note:'停留1小時',cost:''},
+      {time:'16:33',name:'澀谷PARCO',type:'shopping',note:'',cost:''},
+      {time:'17:15',name:'HANDS 澀谷店',type:'shopping',note:'',cost:''},
+      {time:'17:56',name:'澀谷 SKY',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'19:16',name:'森美術館',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'20:27',name:'Rokusan Angel (Burlesque Tokyo)',type:'other',note:'',cost:''},
+      {time:'22:39',name:'一蘭拉麵 池袋站前店',type:'food',note:'停留1小時',cost:''},
+      {time:'23:52',name:'鮨秀',type:'food',note:'停留1小時',cost:''},
+      {time:'00:59',name:'住宿',type:'hotel',note:'',cost:''},
+    ],creds:[]
+  },
+  {
+    day:'Day 3', date:'4/27 (一)', city:'秋葉原・淺草', dest:'淺草寺・仲見世・上野',
+    hotel:'', transport:'JR/地鐵', mood:'shrine',
+    stops:[
+      {time:'08:50',name:'御飯糰 ぼんご 大塚本店',type:'food',note:'',cost:''},
+      {time:'09:16',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'10:28',name:'秋葉原',type:'shopping',note:'停留2小時',cost:''},
+      {time:'12:44',name:'上野阿美橫町',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'13:45',name:'Tempura Miya',type:'food',note:'停留1小時',cost:''},
+      {time:'14:48',name:'OS Drug 上野店藥妝店',type:'shopping',note:'',cost:''},
+      {time:'15:38',name:'仲見世商店街',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'16:39',name:'Yoroshi Cosmetics',type:'shopping',note:'',cost:''},
+      {time:'16:50',name:'淺草寺 雷門',type:'sightseeing',note:'',cost:''},
+      {time:'17:28',name:'Asakusa Chaya Tabanenoshi',type:'food',note:'',cost:''},
+      {time:'18:12',name:'Chinya',type:'food',note:'停留1小時',cost:''},
+      {time:'19:15',name:'Yah kart Asakusa',type:'other',note:'停留1小時',cost:''},
+      {time:'20:51',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'21:57',name:'居酒屋 でんやご馳走 大塚',type:'food',note:'停留1小時',cost:''},
+    ],creds:[]
+  },
+  {
+    day:'Day 4', date:'4/28 (二)', city:'築地・東京站・銀座', dest:'東京鐵塔・東京站・銀座',
+    hotel:'', transport:'JR/地鐵', mood:'food',
+    stops:[
+      {time:'08:00',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'09:36',name:'東京築地市場',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'10:39',name:'築地魚河岸',type:'food',note:'',cost:''},
+      {time:'11:12',name:'Ramen Oyster And Shell',type:'food',note:'停留1小時',cost:''},
+      {time:'12:37',name:'東京鐵塔',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'13:41',name:'東京鐵塔拍照點',type:'sightseeing',note:'',cost:''},
+      {time:'14:13',name:'Balcony by 6th',type:'food',note:'停留1小時',cost:''},
+      {time:'15:35',name:'東京站一番街',type:'shopping',note:'停留1小時',cost:''},
+      {time:'16:38',name:'JUMP SHOP',type:'shopping',note:'停留1小時',cost:''},
+      {time:'17:50',name:'丸之內仲通',type:'sightseeing',note:'',cost:''},
+      {time:'18:32',name:'Uniqlo Ginza Flagship Store',type:'shopping',note:'',cost:''},
+      {time:'19:05',name:'GINZA SIX',type:'shopping',note:'',cost:''},
+      {time:'19:46',name:'厚切り牛タン食べ放題 焼肉一心たん助 旦 有楽町',type:'food',note:'停留1.5小時',cost:''},
+      {time:'21:51',name:'住宿',type:'hotel',note:'',cost:''},
+    ],creds:[]
+  },
+  {
+    day:'Day 5', date:'4/29 (三)', city:'台場・新宿', dest:'獨角獸鋼彈・Tokyo Joypolis・歌舞伎町',
+    hotel:'', transport:'ゆりかもめ/JR', mood:'city',
+    stops:[
+      {time:'10:00',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'11:25',name:'肉祭® 2026 TOKYO JAPAN Premium20',type:'food',note:'停留1小時',cost:''},
+      {time:'12:38',name:'Tokyo Joypolis',type:'sightseeing',note:'停留4小時',cost:''},
+      {time:'16:50',name:'獨角獸鋼彈',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'18:38',name:'新宿のけむり',type:'food',note:'停留1小時',cost:''},
+      {time:'19:40',name:'歌舞伎町一番街',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'20:42',name:'新宿カブキhall',type:'other',note:'',cost:''},
+      {time:'21:33',name:'住宿',type:'hotel',note:'',cost:''},
+    ],creds:[]
+  },
+  {
+    day:'Day 6', date:'4/30 (四)', city:'巢鴨・谷中', dest:'巢鴨地藏通・谷中銀座・成田機場',
+    hotel:'', transport:'JR/成田Express', mood:'food',
+    stops:[
+      {time:'10:00',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'11:06',name:'とんかつ三節',type:'food',note:'停留1小時',cost:''},
+      {time:'12:20',name:'巢鴨地藏通商店街',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'13:21',name:'古奈屋 巢鴨本店',type:'food',note:'停留1小時',cost:''},
+      {time:'14:25',name:'わらび餅もとこ',type:'food',note:'',cost:''},
+      {time:'14:48',name:'住宿',type:'hotel',note:'',cost:''},
+      {time:'15:20',name:'谷中銀座商店街',type:'sightseeing',note:'停留1小時',cost:''},
+      {time:'18:15',name:'NRT·成田國際機場',type:'transport',note:'停留3小時',cost:''},
+      {time:'23:55',name:'TPE·臺灣桃園國際機場',type:'transport',note:'',cost:''},
+    ],creds:[]
+  }
+];
+
+async function importPresetItinerary() {
+  const btn = document.getElementById('importPresetBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '匯入中…'; }
+  let ok = 0;
+  for (let i = 0; i < PRESET_DATA.length; i++) {
+    const d = PRESET_DATA[i];
+    const payload = { ...d, sort_order: i, updated_at: new Date().toISOString() };
+    const { error } = await sb.from('trips').insert(payload);
+    if (!error) ok++;
+  }
+  if (btn) { btn.disabled = false; btn.textContent = '匯入行程'; }
+  if (ok > 0) { toast(`已匯入 ${ok} 天行程 ✓`, 'success'); await loadDays(); }
+  else toast('匯入失敗，請重試', 'err');
+}
+
+// ── FILTER CHIPS ──
+let activeMoodFilter = '';
+
+function renderFilterChips() {
+  const chips = document.getElementById('filterChips');
+  if (!chips) return;
+  const moods = [
+    {val:'', label:'全部', cls:''},
+    {val:'sakura', label:'🌸 賞櫻', cls:'chip-sakura'},
+    {val:'city', label:'🏙️ 城市', cls:'chip-city'},
+    {val:'food', label:'🍜 美食', cls:'chip-food'},
+    {val:'shrine', label:'⛩️ 神社', cls:'chip-shrine'},
+    {val:'shopping', label:'🛍️ 購物', cls:'chip-shopping'},
+    {val:'night', label:'🌃 夜景', cls:'chip-night'},
+  ];
+  chips.innerHTML = moods.map(m => `
+    <button class="filter-chip ${m.cls} ${activeMoodFilter===m.val?'active-chip':''}" onclick="setMoodFilter('${m.val}')" type="button">${m.label}</button>
+  `).join('');
+}
+
+function setMoodFilter(val) {
+  activeMoodFilter = activeMoodFilter === val ? '' : val;
+  renderFilterChips();
+  filterDays();
 }
 
 init();
