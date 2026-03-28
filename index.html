@@ -653,16 +653,7 @@ let weatherCache={}, editingId=null;
 let useCloudMembers=true, useCloudExpenses=true, useCloudDiary=true;
 
 // -- INIT --
-async function init() {
-  loadChecklist();
-  await loadMembers();
-  await loadExpenses();
-  await loadDiary();
-  await loadDays();
-  renderAll();
-  updateCountdown();
-  setInterval(updateCountdown, 60000);
-}
+
 
 // ── FALLBACK LOADERS ──
 async function loadMembers() {
@@ -973,23 +964,7 @@ function renderDiary() {
 
 // ── PREP ──
 let checklistState = {};
-function loadChecklist() { checklistState = JSON.parse(localStorage.getItem('tokyo_prep')) || {'護照':true,'兌換日幣':false}; }
-function renderPreparation() {
-  const el = document.getElementById('prepContent');
-  const items = Object.entries(checklistState);
-  if(!items.length) { el.innerHTML=''; return; }
-  el.innerHTML = items.map(([k,v]) => `
-    <div class="prep-card ${v?'done':''}" onclick="togglePrep('${k}')">
-      <div class="prep-top">
-        <div class="prep-tags"><span class="prep-tag">個人</span></div>
-        <div class="prep-action">⋮</div>
-      </div>
-      <div class="prep-main">
-        <div class="prep-check">${v?'✓':''}</div>
-        <div class="prep-title">${k}</div>
-      </div>
-    </div>`).join('');
-}
+
 function togglePrep(k) { checklistState[k] = !checklistState[k]; localStorage.setItem('tokyo_prep',JSON.stringify(checklistState)); renderPreparation(); }
 
 // ── MEMBERS ──
@@ -1400,14 +1375,9 @@ const DEFAULT_CHECKLIST_CATS = {
   '盥洗用品': ['牙刷牙膏','洗面乳','保濕乳液','防曬乳','個人藥品 / 感冒藥'],
   '旅行輔助': ['頸枕','眼罩 + 耳塞','壓縮袋','小夾鏈袋','購物環保袋']
 };
-let checklistState = {};
+checklistState = {};
 
-function loadChecklist() {
-  try {
-    const saved = localStorage.getItem('tokyo_checklist');
-    checklistState = saved ? JSON.parse(saved) : {};
-  } catch(e) { checklistState = {}; }
-}
+
 
 function saveChecklist() {
   try { localStorage.setItem('tokyo_checklist', JSON.stringify(checklistState)); } catch(e) {}
@@ -1658,9 +1628,19 @@ function setMoodFilter(val) {
 }
 
 init();
-
-
-init();
 </script>
 </body>
 </html>
+
+async function init() {
+  loadChecklist();
+  await loadMembers();
+  await loadExpenses();
+  await loadDiary();
+  await loadDays();
+  renderAll();
+  if(typeof updateCountdown === 'function') updateCountdown();
+  setInterval(() => { if(typeof updateCountdown === 'function') updateCountdown(); }, 60000);
+}
+function loadChecklist() { checklistState = JSON.parse(localStorage.getItem('tokyo_prep')) || {'護照':true,'兌換日幣':false}; }
+init();
